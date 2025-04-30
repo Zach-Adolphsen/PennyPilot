@@ -1,1 +1,109 @@
-<p>dashboard works!</p>
+<div class="container-fluid p-4">
+  <div class="row mb-4">
+    <!-- overview -->
+    <div class="col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Overview</h5>
+          <div class="row">
+            <div class="col">
+              <h6>Income</h6>
+              <ul class="list-unstyled">
+                <li>• Top Income #1 - $XXXX.XX</li>
+                <li>• Top Income #2 - $XXXX.XX</li>
+                <li>• Top Income #3 - $XXXX.XX</li>
+              </ul>
+            </div>
+            <div class="col">
+              <h6>Expenses</h6>
+              <ul class="list-unstyled">
+                <li>• Top Expense #1 - $XXXX.XX</li>
+                <li>• Top Expense #2 - $XXXX.XX</li>
+                <li>• Top Expense #3 - $XXXX.XX</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- chart (wip) -->
+    <!-- replace with real chart later, struggling to figure out dynamic chart building plugin(angular has native chart software, will probably figure it out later) -->
+    <!-- Chart Placeholder -->
+    <div class="col-lg-6 d-flex justify-content-center align-items-center">
+      <!-- Replace with real chart later -->
+      <img
+        src="https://media1.tenor.com/m/xDKmOyBg0h4AAAAd/emoji-feet.gif"
+        alt="burh"
+        class="img-fluid"
+        style="max-width: 300px"
+      />
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- expenses -->
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Expense Breakdown</h5>
+            this isnt implemented correctly, look at bottom of page
+            <button routerLink="/expenses" class="btn btn-sm btn-outline-secondary">+</button> 
+          </div>
+          <p>Total Expenses: $XXXX.XX</p>
+          <ul class="list-unstyled">
+            <li>• Expense #1 - $XXX.XX</li>
+            <li>• Expense #2 - $XXX.XX</li>
+            <li>• Expense #3 - $XXX.XX</li>
+            <li>• Other - $XXX.XX</li>
+          </ul>
+          <div class="d-flex justify-content-between mt-3">
+            <div class="text-center">
+              <i class="bi bi-piggy-bank fs-3"></i>
+              <p>XX.XX<br /><small>Savings</small></p>
+            </div>
+            <div class="text-center">
+              <i class="bi bi-cart fs-3"></i>
+              <p>XX.XX<br /><small>Spending</small></p>
+            </div>
+            <div class="text-center">
+              <i class="bi bi-credit-card fs-3"></i>
+              <p>XX.XX<br /><small>Wants</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- income -->
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">Income Breakdown</h5>
+            this isnt implemented correctly, look at bottom of page
+            <button routerLink="/income" class="btn btn-sm btn-outline-secondary">+</button>
+          </div>
+          <p>Total Income: $XXXX.XX</p>
+          <p>Savings Plan: 50 / 20 / 30</p>
+          <div class="d-flex justify-content-between mt-3">
+            <div class="text-center">
+              <i class="bi bi-piggy-bank fs-3"></i>
+              <p>XX.XX<br /><small>Savings</small></p>
+            </div>
+            <div class="text-center">
+              <i class="bi bi-cart fs-3"></i>
+              <p>XX.XX<br /><small>Spending</small></p>
+            </div>
+            <div class="text-center">
+              <i class="bi bi-credit-card fs-3"></i>
+              <p>XX.XX<br /><small>Wants</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>
