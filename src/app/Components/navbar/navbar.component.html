@@ -1,6 +1,11 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid mx-4">
-    <a href="" class="navbar-brand">
+    <a
+      href=""
+      class="navbar-brand"
+      routerLink="/home"
+      routerLinkActive="active"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="25"
@@ -27,16 +32,16 @@
       <div class="navbar-nav ms-auto">
         <ul class="navbar-nav">
           <li class="nav-item mx-3 text-center">
-            <a id="navItem" class="nav-link" href="">Dashboard</a>
+            <a id="navItem" class="nav-link" routerLink="/home">Dashboard</a>
           </li>
           <li class="nav-item mx-3 text-center">
-            <a id="navItem" class="nav-link" href="#">Income</a>
+            <a id="navItem" class="nav-link" routerLink="/income">Income</a>
           </li>
           <li class="nav-item mx-3 text-center">
-            <a id="navItem" class="nav-link" href="#">Expenses</a>
+            <a id="navItem" class="nav-link" routerLink="/expense">Expenses</a>
           </li>
           <li class="nav-item mx-3 text-center">
-            <a id="navItem" class="nav-link" href="#">Account</a>
+            <a id="navItem" class="nav-link" routerLink="/account">Account</a>
           </li>
         </ul>
       </div>

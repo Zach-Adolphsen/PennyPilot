@@ -1,8 +1,12 @@
 import { Routes } from '@angular/router';
-import { IncomeCardComponent } from './Components/income-card/income-card.component';
-import { ExpenseCardComponent } from './Components/expense-card/expense-card.component';
+import { DashboardComponent } from './Components/dashboard/dashboard.component';
+import { AccountComponent } from './Components/account/account.component';
+import { IncomePageComponent } from './income-page/income-page.component';
+import { ExpensePageComponent } from './expense-page/expense-page.component';
 
 export const routes: Routes = [
-   {path: 'income', component: IncomeCardComponent} ,
-   {path: 'expenses', component: ExpenseCardComponent} ,
+  { path: 'home', component: DashboardComponent },
+  { path: 'account', component: AccountComponent },
+  { path: 'income', component: IncomePageComponent },
+  { path: 'expense', component: ExpensePageComponent },
 ];
