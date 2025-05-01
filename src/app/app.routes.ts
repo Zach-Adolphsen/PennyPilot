@@ -5,6 +5,7 @@ import { IncomePageComponent } from './income-page/income-page.component';
 import { ExpensePageComponent } from './expense-page/expense-page.component';
 
 export const routes: Routes = [
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: DashboardComponent },
   { path: 'account', component: AccountComponent },
   { path: 'income', component: IncomePageComponent },
