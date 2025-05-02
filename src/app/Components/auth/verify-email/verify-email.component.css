@@ -1,0 +1,31 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  font-family: "Poppins", sans-serif;
+}
+
+.card {
+  border: none;
+  border-radius: 1rem;
+  background: #ffffffee;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+h4 {
+  font-weight: 600;
+  color: #dc3545; /* Bootstrap danger color */
+}
+
+p {
+  font-size: 1rem;
+  color: #555;
+  margin: 0;
+}

@@ -1,0 +1,63 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  font-family: "Poppins", sans-serif;
+}
+
+.card {
+  border: none;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+h4 {
+  text-align: center;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #555;
+}
+
+.btn-info {
+  font-weight: 500;
+}
+
+.btn-info:hover {
+  background-color: #138496;
+}
+
+a {
+  font-size: 0.9rem;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.card.shadow.text-center {
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.card.shadow.text-center:hover {
+  transform: scale(1.02);
+}
+
+.card.shadow.text-center img {
+  vertical-align: middle;
+  margin-right: 8px;
+}
