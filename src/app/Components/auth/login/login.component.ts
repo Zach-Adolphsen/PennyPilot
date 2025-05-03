@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -29,7 +29,6 @@ export class LoginComponent {
     this.authService.login(this.email, this.password);
     this.email = '';
     this.password = '';
-    RouterLink
   }
 
   signInWithGoogle() {
