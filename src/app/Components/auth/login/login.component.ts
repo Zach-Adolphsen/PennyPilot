@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../auth-service.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
@@ -28,6 +29,7 @@ export class LoginComponent {
     this.authService.login(this.email, this.password);
     this.email = '';
     this.password = '';
+    RouterLink
   }
 
   signInWithGoogle() {

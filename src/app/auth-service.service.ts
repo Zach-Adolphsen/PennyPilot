@@ -20,7 +20,7 @@ export class AuthService {
   login(email: string, password: string) {
     signInWithEmailAndPassword(this.auth, email, password).then(() => {
       localStorage.setItem('token', 'true');
-      this.router.navigate(['/dashboard'])
+      this.router.navigate(['/home'])
     }, err => {
       alert(`Something went wrong: ${err.message} `);
       this.router.navigate(['/login'])
