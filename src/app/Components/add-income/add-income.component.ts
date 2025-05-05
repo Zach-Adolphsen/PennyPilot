@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, numberAttribute } from '@angular/core';
 import { IncomeService } from '../../Services/Income Service/income.service';
 import { FormsModule } from '@angular/forms';
 import { Income } from '../../income';
@@ -17,6 +17,11 @@ export class AddIncomeComponent {
   }
 
   onAddIncome(date: string, source: string, amount: string) {
-    this.incomeService.addIncome(this.incomeList.length, date, source, amount);
+    this.incomeService.addIncome(
+      this.incomeList.length + 1,
+      date,
+      source,
+      numberAttribute(amount)
+    );
   }
 }

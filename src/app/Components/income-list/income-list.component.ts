@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-income-list',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule],
   templateUrl: './income-list.component.html',
   styleUrl: './income-list.component.css',
 })

@@ -10,7 +10,7 @@ export class IncomeService {
 
   incomeList = incomeList;
 
-  addIncome(id: number, date: string, source: string, amount: string) {
+  addIncome(id: number, date: string, source: string, amount: number) {
     this.incomeList.push({ id, date, source, amount });
   }
 
