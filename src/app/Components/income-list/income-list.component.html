@@ -1,0 +1,36 @@
+<div class="card shadow-sm">
+  <div class="card-body">
+    <div class="card-title">
+      <h3>List of Income</h3>
+      <hr />
+    </div>
+  </div>
+  <div class="container">
+    <div class="row mx-1">
+      <div class="col-sm">
+        <p>Date</p>
+      </div>
+      <div class="col-sm">
+        <p>Source</p>
+      </div>
+      <div class="col-sm">
+        <p>Amount</p>
+      </div>
+      <hr />
+    </div>
+    @for (income of incomeList; track $index) {
+    <div class="row mx-1">
+      <div class="col-sm">
+        <p>{{ income.date }}</p>
+      </div>
+      <div class="col-sm">
+        <p>{{ income.source }}</p>
+      </div>
+      <div class="col-sm">
+        <p>${{ income.amount }}</p>
+      </div>
+      <hr />
+    </div>
+    }
+  </div>
+</div>

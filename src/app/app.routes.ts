@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from './Components/dashboard/dashboard.component';
 import { AccountComponent } from './Components/auth/account/account.component';
-import { IncomePageComponent } from './income-page/income-page.component';
-import { ExpensePageComponent } from './expense-page/expense-page.component';
+import { IncomePageComponent } from './Components/income-page/income-page.component';
+import { ExpensePageComponent } from './Components/expense-page/expense-page.component';
 import { LoginComponent } from './Components/auth/login/login.component';
 import { RegisterComponent } from './Components/auth/register/register.component';
 import { VerifyEmailComponent } from './Components/auth/verify-email/verify-email.component';

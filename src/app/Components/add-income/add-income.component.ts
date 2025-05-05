@@ -1,15 +1,15 @@
 import { Component, inject } from '@angular/core';
-import { IncomeService } from '../Services/Income Service/income.service';
-import { Income } from '../income';
+import { IncomeService } from '../../Services/Income Service/income.service';
 import { FormsModule } from '@angular/forms';
+import { Income } from '../../income';
 
 @Component({
-  selector: 'app-income-page',
+  selector: 'app-add-income',
   imports: [FormsModule],
-  templateUrl: './income-page.component.html',
-  styleUrl: './income-page.component.css',
+  templateUrl: './add-income.component.html',
+  styleUrl: './add-income.component.css',
 })
-export class IncomePageComponent {
+export class AddIncomeComponent {
   incomeService = inject(IncomeService);
 
   get incomeList(): Income[] {

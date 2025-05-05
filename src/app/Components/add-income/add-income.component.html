@@ -1,0 +1,43 @@
+<div class="card shadow-sm">
+  <div class="card-body">
+    <div class="card-title">
+      <h3>Add Income</h3>
+      <hr />
+    </div>
+
+    <h6>Date</h6>
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="MM/DD/YYYY" #date />
+    </div>
+    <h6>Source</h6>
+    <div class="input-group mb-3">
+      <input
+        type="text"
+        class="form-control"
+        aria-label="Amount"
+        placeholder="(Primary Income, Secondary Income, Venmo, etc.)"
+        #source
+      />
+    </div>
+    <h6>Amount</h6>
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">$</span>
+      </div>
+      <input
+        type="text"
+        class="form-control"
+        aria-label="Amount"
+        placeholder="1234.56  |  Note: DO NOT USE A '$'"
+        #amount
+      />
+    </div>
+
+    <button
+      class="btn btn-primary"
+      (click)="onAddIncome(date.value, source.value, amount.value)"
+    >
+      <p class="my-1">Add Income</p>
+    </button>
+  </div>
+</div>
