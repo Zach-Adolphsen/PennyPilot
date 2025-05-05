@@ -17,9 +17,6 @@ export class AddIncomeComponent {
   }
 
   onAddIncome(date: string, source: string, amount: string) {
-    this.incomeService.addIncome(date, source, amount);
-    // this.incomeList = [...this.incomeService.incomeList];
-    console.log('Income Added: ', { date, source, amount });
-    console.log('Updated incomeList: ', this.incomeList);
+    this.incomeService.addIncome(this.incomeList.length, date, source, amount);
   }
 }
