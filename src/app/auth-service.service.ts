@@ -73,8 +73,6 @@ export class AuthService {
       this.router.navigate(['/register']);
     }
   }
-  
-  
 
   logout() {
     signOut(this.auth)
