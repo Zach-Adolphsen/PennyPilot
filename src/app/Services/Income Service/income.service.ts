@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { incomeList } from './incomeList';
-import { Income } from '../../income';
 
 @Injectable({
   providedIn: 'root',
@@ -16,9 +15,5 @@ export class IncomeService {
 
   deleteIncome(index: number) {
     this.incomeList.splice(index, 1);
-  }
-
-  getIncomeByIndex(index: number): Income {
-    return incomeList[index];
   }
 }
