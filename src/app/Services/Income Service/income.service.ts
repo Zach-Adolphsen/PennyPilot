@@ -1,27 +1,5 @@
-// import { Injectable } from '@angular/core';
-// import { incomeList } from './incomeList';
-// import { Income } from '../../income';
-
-// @Injectable({
-//   providedIn: 'root',
-// })
-// export class IncomeService {
-//   constructor() {}
-
-//   incomeList = incomeList;
-
-//   addIncome(aIncome: Income) {
-//     this.incomeList.push(aIncome);
-//   }
-
-//   deleteIncome(index: number) {
-//     this.incomeList.splice(index, 1);
-//   }
-// }
-
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Income } from '../../income';
-import { firestore } from '../firebase.config'; // Import your Firestore instance
 import {
   collection,
   doc,
@@ -31,25 +9,33 @@ import {
   updateDoc,
   CollectionReference,
   DocumentData,
+  Firestore, // Import Firestore type
+  getFirestore, // Import getFirestore
 } from 'firebase/firestore';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { initializeApp } from 'firebase/app'; // Import initializeApp
+// import { environment } from 'src/environments/environment'; // Corrected path to environment
+import { firebaseConfig } from '../../app.config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IncomeService {
   private incomeCollection: CollectionReference<DocumentData>;
+  private firestore: Firestore; // Inject Firestore instance
 
   constructor() {
-    this.incomeCollection = collection(firestore, 'incomes'); // 'incomes' is the name of your Firestore collection
+    // Initialize Firebase app (if not already done globally)
+    const app = initializeApp(firebaseConfig);
+    this.firestore = getFirestore(app);
+    this.incomeCollection = collection(this.firestore, 'incomes'); // Pass the Firestore instance
   }
 
   addIncome(income: Income): Observable<string> {
-    // Remove the id property as Firestore will generate it
     const { id, ...incomeData } = income;
     return from(addDoc(this.incomeCollection, incomeData)).pipe(
-      map((docRef) => docRef.id) // Return the newly generated document ID
+      map((docRef) => docRef.id)
     );
   }
 

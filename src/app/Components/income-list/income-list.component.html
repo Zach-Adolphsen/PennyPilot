@@ -18,8 +18,8 @@
       </div>
       <hr />
     </div>
-    @for (income of incomeList$; track $index; let i = $index) {
-    @if(editingIncome?.id != income.id){
+    @for (income of incomeList$ | async; track $index;) { @if(editingIncome?.id
+    != income.id){
     <div class="row mx-1">
       <div class="col-3">
         <p>{{ income.date }}</p>
@@ -47,7 +47,7 @@
           <p>Edit</p>
         </a>
       </div>
-      <div class="col-1" (click)="onDeleteIncome(i)">
+      <div class="col-1" (click)="onDeleteIncome(income.id)">
         <button class="btn">
           <svg
             xmlns="http://www.w3.org/2000/svg"

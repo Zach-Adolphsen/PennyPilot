@@ -6,7 +6,7 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { routes } from './app.routes';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: 'AIzaSyDJtLkCGW7G9pjQ6Db87MeiC0vTGBfZtmo',
   authDomain: 'pennypilot-70751.firebaseapp.com',
   projectId: 'pennypilot-70751',

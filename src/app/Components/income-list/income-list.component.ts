@@ -4,10 +4,11 @@ import { Income } from '../../income';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-income-list',
-  imports: [FormsModule],
+  imports: [FormsModule, AsyncPipe],
   templateUrl: './income-list.component.html',
   styleUrl: './income-list.component.css',
 })
@@ -16,17 +17,10 @@ export class IncomeListComponent implements OnInit {
   incomeList$!: Observable<Income[]>;
   editingIncome: Income | null = null;
 
-  // get incomeList(): Income[] {
-  //   return this.incomeService.incomeList;
-  // }
-
   ngOnInit(): void {
     this.incomeList$ = this.incomeService.getIncomeList();
   }
 
-  // onDeleteIncome(index: number) {
-  //   this.incomeService.deleteIncome(index);
-  // }
   onDeleteIncome(incomeId: string): void {
     this.incomeService.deleteIncome(incomeId).subscribe({
       next: () => {
@@ -44,18 +38,6 @@ export class IncomeListComponent implements OnInit {
     this.editingIncome = { ...income };
   }
 
-  // saveIncome(): void {
-  //   if (this.editingIncome) {
-  //     const index = this.incomeList.findIndex(
-  //       (income) => income.id === this.editingIncome!.id
-  //     );
-  //     if (index !== -1) {
-  //       this.incomeList[index] = { ...this.editingIncome };
-  //       this.editingIncome = null;
-  //       console.log('Income updated:', this.incomeList[index]);
-  //     }
-  //   }
-  // }
   saveIncome(): void {
     if (this.editingIncome) {
       this.incomeService.updateIncome(this.editingIncome).subscribe({
