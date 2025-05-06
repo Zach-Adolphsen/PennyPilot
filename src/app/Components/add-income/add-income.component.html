@@ -5,9 +5,92 @@
       <hr />
     </div>
 
+    <form [formGroup]="incomeForm" (ngSubmit)="onAddIncome()">
+      <h6>Date</h6>
+      <div class="input-group mb-3">
+        <input type="date" class="form-control" formControlName="date" />
+        <div
+          *ngIf="incomeForm.controls.date.touched && incomeForm.controls.date.errors?.['required']"
+          class="text-danger"
+        >
+          Date is required.
+        </div>
+        <div
+          *ngIf="incomeForm.controls.date.touched && incomeForm.controls.date.errors?.['fourDigitYear']"
+          class="text-danger"
+        >
+          Please enter the date with a four-digit year (YYYY-MM-DD).
+        </div>
+      </div>
+      <h6>Source</h6>
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          class="form-control"
+          aria-label="Amount"
+          placeholder="(Primary Income, Secondary Income, Venmo, etc.)"
+          formControlName="source"
+        />
+        <div
+          *ngIf="incomeForm.controls.source.touched && incomeForm.controls.source.errors?.['required']"
+          class="text-danger"
+        >
+          Source is required.
+        </div>
+      </div>
+      <h6>Amount</h6>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">$</span>
+        </div>
+        <input
+          type="number"
+          class="form-control"
+          aria-label="Amount"
+          placeholder="1234.56  |  Note: DO NOT USE A '$'"
+          formControlName="amount"
+        />
+        <div
+          *ngIf="incomeForm.controls.amount.touched && incomeForm.controls.amount.errors?.['required']"
+          class="text-danger"
+        >
+          Amount is required.
+        </div>
+        <div
+          *ngIf="incomeForm.controls.amount.touched && incomeForm.controls.amount.errors?.['min']"
+          class="text-danger"
+        >
+          Amount must be greater than 0.
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="!incomeForm.valid"
+      >
+        <p class="my-1">Add Income</p>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!--
+ <div class="card shadow-sm">
+  <div class="card-body">
+    <div class="card-title">
+      <h3>Add Income</h3>
+      <hr />
+    </div>
+
     <h6>Date</h6>
     <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="MM/DD/YYYY" #date />
+      <input
+        type="date"
+        class="form-control"
+        placeholder="MM/DD/YYYY"
+        [(ngModel)]="aIncome.date"
+      />
     </div>
     <h6>Source</h6>
     <div class="input-group mb-3">
@@ -16,7 +99,7 @@
         class="form-control"
         aria-label="Amount"
         placeholder="(Primary Income, Secondary Income, Venmo, etc.)"
-        #source
+        [(ngModel)]="aIncome.source"
       />
     </div>
     <h6>Amount</h6>
@@ -29,15 +112,12 @@
         class="form-control"
         aria-label="Amount"
         placeholder="1234.56  |  Note: DO NOT USE A '$'"
-        #amount
+        [(ngModel)]="aIncome.amount"
       />
     </div>
 
-    <button
-      class="btn btn-primary"
-      (click)="onAddIncome(date.value, source.value, amount.value)"
-    >
+    <button class="btn btn-primary" (click)="onAddIncome()">
       <p class="my-1">Add Income</p>
     </button>
   </div>
-</div>
+</div> -->
