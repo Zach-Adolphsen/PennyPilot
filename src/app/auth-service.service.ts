@@ -13,6 +13,7 @@ import {
   User,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { Firestore, doc, setDoc } from '@angular/fire/firestore';
 
 export interface UserInfo {
   fname: string;
@@ -27,6 +28,7 @@ export interface UserInfo {
 export class AuthService {
   private auth = inject(Auth);
   private router = inject(Router);
+  private firestore = inject(Firestore);
 
   login(email: string, password: string) {
     signInWithEmailAndPassword(this.auth, email, password).then(
@@ -41,22 +43,30 @@ export class AuthService {
     );
   }
 
-  register(aUser: UserInfo) {
-    createUserWithEmailAndPassword(this.auth, aUser.email, aUser.password)
-      .then((res) => {
-        const user: User = res.user;
-        const displayName = aUser.fname + ' ' + aUser.lname;
-        updateProfile(user, { displayName });
-        alert('Registration Successful');
-        this.router.navigate(['/login']);
-      })
-      .catch((err) => {
-        alert(err.message);
-        this.router.navigate(['/register']);
+  async register(aUser: UserInfo) {
+    try {
+      const res = await createUserWithEmailAndPassword(this.auth, aUser.email, aUser.password);
+      const user: User = res.user;
+      const displayName = `${aUser.fname} ${aUser.lname}`;
+  
+      await updateProfile(user, { displayName });
+  
+      await setDoc(doc(this.firestore, 'users', user.uid), {
+        uid: user.uid,
+        fname: aUser.fname,
+        lname: aUser.lname,
+        email: aUser.email,
+        createdAt: new Date()
       });
-
-    updateProfile;
+  
+      alert('Registration Successful');
+      this.router.navigate(['/login']);
+    } catch (err: any) {
+      alert(err.message);
+      this.router.navigate(['/register']);
+    }
   }
+  
 
   logout() {
     signOut(this.auth)
