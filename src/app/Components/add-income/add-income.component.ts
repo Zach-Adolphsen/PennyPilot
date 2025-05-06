@@ -21,7 +21,7 @@ export class AddIncomeComponent {
       this.incomeList.length + 1,
       date,
       source,
-      numberAttribute(amount)
+      Number(amount)
     );
   }
 }
