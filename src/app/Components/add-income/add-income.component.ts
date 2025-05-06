@@ -52,7 +52,7 @@ export class AddIncomeComponent {
       source: FormControl<string | null>;
       amount: FormControl<number | null>;
     }>({
-      id: this.fb.control('', Validators.required),
+      id: this.fb.control(''), // Removed Validators.required
       date: this.fb.control('', [Validators.required, fourDigitYearValidator]), // Apply the custom validator
       source: this.fb.control('', Validators.required),
       amount: this.fb.control(null, [
@@ -85,7 +85,6 @@ export class AddIncomeComponent {
         },
         error: (error) => {
           console.error('Error adding income:', error);
-          // Handle the error appropriately (e.g., display an error message)
         },
       });
     } else {
