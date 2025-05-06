@@ -51,12 +51,19 @@ export class AuthService {
   
       await updateProfile(user, { displayName });
   
+      // Create user profile
       await setDoc(doc(this.firestore, 'users', user.uid), {
         uid: user.uid,
         fname: aUser.fname,
         lname: aUser.lname,
         email: aUser.email,
         createdAt: new Date()
+      });
+  
+      // Create income and expense entry
+      await setDoc(doc(this.firestore, 'income-expense', user.uid), {
+        income: [],
+        expenses: []
       });
   
       alert('Registration Successful');
@@ -66,6 +73,7 @@ export class AuthService {
       this.router.navigate(['/register']);
     }
   }
+  
   
 
   logout() {
