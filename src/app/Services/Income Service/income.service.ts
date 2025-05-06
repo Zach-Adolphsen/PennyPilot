@@ -11,7 +11,7 @@ import {
   DocumentData,
   Firestore, // Import from AngularFire
 } from '@angular/fire/firestore';
-import { Observable, from, switchMap, map } from 'rxjs';
+import { Observable, from, switchMap, map, Subject } from 'rxjs';
 import { AuthService } from '../../auth-service.service';
 import { inject } from '@angular/core'; // Import inject
 
@@ -20,6 +20,9 @@ import { inject } from '@angular/core'; // Import inject
 })
 export class IncomeService {
   private firestore: Firestore = inject(Firestore); // Inject Firestore
+
+  private incomeSourceAdded = new Subject<void>();
+  incomeAdded$ = this.incomeSourceAdded.asObservable();
 
   constructor(private authService: AuthService) {}
 
@@ -42,11 +45,24 @@ export class IncomeService {
       switchMap((incomeCollection) => {
         const { id, ...incomeData } = income;
         return from(addDoc(incomeCollection, incomeData)).pipe(
-          map((docRef) => docRef.id)
+          map((docRef) => {
+            this.incomeSourceAdded.next(); // Notify that income was added
+            return docRef.id;
+          })
         );
       })
     );
   }
+  // addIncome(income: Income): Observable<string> {
+  //   return this.getUserIncomeCollection().pipe(
+  //     switchMap((incomeCollection) => {
+  //       const { id, ...incomeData } = income;
+  //       return from(addDoc(incomeCollection, incomeData)).pipe(
+  //         map((docRef) => docRef.id)
+  //       );
+  //     })
+  //   );
+  // }
 
   getIncomeList(): Observable<Income[]> {
     return this.getUserIncomeCollection().pipe(

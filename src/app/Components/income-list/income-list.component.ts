@@ -3,22 +3,28 @@ import { IncomeService } from '../../Services/Income Service/income.service';
 import { Income } from '../../income';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { AddIncomeComponent } from '../add-income/add-income.component';
 
 @Component({
   selector: 'app-income-list',
-  imports: [FormsModule, AsyncPipe],
+  imports: [FormsModule, AsyncPipe, AddIncomeComponent],
   templateUrl: './income-list.component.html',
   styleUrl: './income-list.component.css',
 })
 export class IncomeListComponent implements OnInit {
   private incomeService = inject(IncomeService);
-  incomeList$!: Observable<Income[]>;
   editingIncome: Income | null = null;
+  incomeList$: Observable<Income[]> = this.incomeService.getIncomeList();
+  private incomeAddedSubscription!: Subscription;
 
   ngOnInit(): void {
-    this.incomeList$ = this.incomeService.getIncomeList();
+    this.incomeAddedSubscription = this.incomeService.incomeAdded$.subscribe(
+      () => {
+        this.incomeList$ = this.incomeService.getIncomeList(); // Refresh the list
+      }
+    );
   }
 
   onDeleteIncome(incomeId: string): void {
@@ -29,7 +35,6 @@ export class IncomeListComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error deleting income:', error);
-        // Handle error appropriately
       },
     });
   }
