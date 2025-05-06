@@ -9,53 +9,79 @@ import {
   updateDoc,
   CollectionReference,
   DocumentData,
-  Firestore, // Import Firestore type
-  getFirestore, // Import getFirestore
+  Firestore,
+  getFirestore,
 } from 'firebase/firestore';
-import { Observable, from } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { initializeApp } from 'firebase/app'; // Import initializeApp
-// import { environment } from 'src/environments/environment'; // Corrected path to environment
+import { Observable, from, switchMap, map, filter } from 'rxjs'; // Import filter
+import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../../app.config';
+import { AuthService } from '../../auth-service.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IncomeService {
-  private incomeCollection: CollectionReference<DocumentData>;
-  private firestore: Firestore; // Inject Firestore instance
+  private firestore: Firestore;
 
-  constructor() {
-    // Initialize Firebase app (if not already done globally)
+  constructor(private authService: AuthService) {
     const app = initializeApp(firebaseConfig);
     this.firestore = getFirestore(app);
-    this.incomeCollection = collection(this.firestore, 'incomes'); // Pass the Firestore instance
+  }
+
+  private getUserIncomeCollection(): Observable<
+    CollectionReference<DocumentData>
+  > {
+    return this.authService.getUser().pipe(
+      map((user) => {
+        if (!user) {
+          throw new Error('User not authenticated');
+        }
+        const userDoc = doc(this.firestore, 'users', user.uid);
+        return collection(userDoc, 'income-expense');
+      })
+    );
   }
 
   addIncome(income: Income): Observable<string> {
-    const { id, ...incomeData } = income;
-    return from(addDoc(this.incomeCollection, incomeData)).pipe(
-      map((docRef) => docRef.id)
+    return this.getUserIncomeCollection().pipe(
+      switchMap((incomeCollection) => {
+        const { id, ...incomeData } = income;
+        return from(addDoc(incomeCollection, incomeData)).pipe(
+          map((docRef) => docRef.id)
+        );
+      })
     );
   }
 
   getIncomeList(): Observable<Income[]> {
-    return from(getDocs(this.incomeCollection)).pipe(
-      map((snapshot) => {
-        return snapshot.docs.map(
-          (doc) => ({ id: doc.id, ...doc.data() } as Income)
+    return this.getUserIncomeCollection().pipe(
+      switchMap((incomeCollection) => {
+        return from(getDocs(incomeCollection)).pipe(
+          map((snapshot) => {
+            return snapshot.docs.map(
+              (doc) => ({ id: doc.id, ...doc.data() } as Income)
+            );
+          })
         );
       })
     );
   }
 
   deleteIncome(incomeId: string): Observable<void> {
-    const incomeDocument = doc(this.incomeCollection, incomeId);
-    return from(deleteDoc(incomeDocument));
+    return this.getUserIncomeCollection().pipe(
+      switchMap((incomeCollection) => {
+        const incomeDocument = doc(incomeCollection, incomeId);
+        return from(deleteDoc(incomeDocument));
+      })
+    );
   }
 
   updateIncome(income: Income): Observable<void> {
-    const incomeDocument = doc(this.incomeCollection, income.id);
-    return from(updateDoc(incomeDocument, { ...income }));
+    return this.getUserIncomeCollection().pipe(
+      switchMap((incomeCollection) => {
+        const incomeDocument = doc(incomeCollection, income.id);
+        return from(updateDoc(incomeDocument, { ...income }));
+      })
+    );
   }
 }

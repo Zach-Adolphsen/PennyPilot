@@ -37,7 +37,7 @@ export class AddIncomeComponent {
   private authService = inject(AuthService);
 
   incomeForm!: FormGroup<{
-    // id: FormControl<string | null>;
+    id: FormControl<string | null>;
     date: FormControl<string | null>;
     source: FormControl<string | null>;
     amount: FormControl<number | null>;
@@ -47,12 +47,12 @@ export class AddIncomeComponent {
 
   ngOnInit(): void {
     this.incomeForm = this.fb.group<{
-      // id: FormControl<string | null>;
+      id: FormControl<string | null>;
       date: FormControl<string | null>;
       source: FormControl<string | null>;
       amount: FormControl<number | null>;
     }>({
-      // id: this.fb.control('', Validators.required),
+      id: this.fb.control('', Validators.required),
       date: this.fb.control('', [Validators.required, fourDigitYearValidator]), // Apply the custom validator
       source: this.fb.control('', Validators.required),
       amount: this.fb.control(null, [

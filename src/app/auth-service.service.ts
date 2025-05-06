@@ -10,10 +10,12 @@ import {
   updateCurrentUser,
   updatePhoneNumber,
   updateProfile,
+  user,
   User,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Firestore, doc, setDoc } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 export interface UserInfo {
   fname: string;
@@ -29,6 +31,7 @@ export class AuthService {
   private auth = inject(Auth);
   private router = inject(Router);
   private firestore = inject(Firestore);
+  currentUser$: Observable<User | null> = user(this.auth);
 
   login(email: string, password: string) {
     signInWithEmailAndPassword(this.auth, email, password).then(
@@ -45,27 +48,31 @@ export class AuthService {
 
   async register(aUser: UserInfo) {
     try {
-      const res = await createUserWithEmailAndPassword(this.auth, aUser.email, aUser.password);
+      const res = await createUserWithEmailAndPassword(
+        this.auth,
+        aUser.email,
+        aUser.password
+      );
       const user: User = res.user;
       const displayName = `${aUser.fname} ${aUser.lname}`;
-  
+
       await updateProfile(user, { displayName });
-  
+
       // Create user profile
       await setDoc(doc(this.firestore, 'users', user.uid), {
         uid: user.uid,
         fname: aUser.fname,
         lname: aUser.lname,
         email: aUser.email,
-        createdAt: new Date()
+        createdAt: new Date(),
       });
-  
-      // Create income and expense entry
-      await setDoc(doc(this.firestore, 'income-expense', user.uid), {
-        income: [],
-        expenses: []
-      });
-  
+
+      // // Create income and expense entry
+      // await setDoc(doc(this.firestore, 'income-expense', user.uid), {
+      //   income: [],
+      //   expenses: [],
+      // });
+
       alert('Registration Successful');
       this.router.navigate(['/login']);
     } catch (err: any) {
@@ -73,8 +80,6 @@ export class AuthService {
       this.router.navigate(['/register']);
     }
   }
-  
-  
 
   logout() {
     signOut(this.auth)
@@ -108,7 +113,7 @@ export class AuthService {
       });
   }
 
-  getUser(): User | null {
-    return this.auth.currentUser;
+  getUser(): Observable<User | null> {
+    return this.currentUser$;
   }
 }
