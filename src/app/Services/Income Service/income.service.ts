@@ -60,31 +60,78 @@ export class IncomeService {
       switchMap((incomeCollection) => {
         const { id, ...incomeData } = income;
         return from(addDoc(incomeCollection, incomeData)).pipe(
-          map((docRef) => {
+          switchMap((docRef) => {
             this.incomeSourceAdded.next(); // Notify that income was added
-            this.totalIncomeService.updateTotal();
-            return docRef.id;
+            return this.getTotalIncome().pipe(
+              map((total) => {
+                this.totalIncomeService.updateTotal(total); // Update the total
+                return docRef.id;
+              })
+            );
           })
         );
       })
     );
   }
+  // addIncome(income: Income): Observable<string> {
+  //   return this.getUserIncomeCollection().pipe(
+  //     switchMap((incomeCollection) => {
+  //       const { id, ...incomeData } = income;
+  //       return from(addDoc(incomeCollection, incomeData)).pipe(
+  //         map((docRef) => {
+  //           this.incomeSourceAdded.next();
+  //           this.totalIncomeService.updateTotal();
+  //           return docRef.id;
+  //         })
+  //       );
+  //     })
+  //   );
+  // }
 
+  // getIncomeList(): Observable<Income[]> {
+  //   return this.getUserIncomeCollection().pipe(
+  //     switchMap((incomeCollection) => {
+  //       const orderedCollection = query(incomeCollection, orderBy('date'));
+  //       return from(getDocs(orderedCollection)).pipe(
+  //         map((snapshot) => {
+  //           return snapshot.docs.map((doc) => {
+  //             const data = doc.data() as any;
+  //             const date: Timestamp = data.date;
+  //             const formattedDate = date
+  //               ? date.toDate().toLocaleDateString()
+  //               : '';
+
+  //             return { id: doc.id, ...data, date: formattedDate } as Income;
+  //           });
+  //         })
+  //       );
+  //     })
+  //   );
+  // }
   getIncomeList(): Observable<Income[]> {
     return this.getUserIncomeCollection().pipe(
       switchMap((incomeCollection) => {
         const orderedCollection = query(incomeCollection, orderBy('date'));
         return from(getDocs(orderedCollection)).pipe(
           map((snapshot) => {
-            return snapshot.docs.map((doc) => {
+            const incomes = snapshot.docs.map((doc) => {
               const data = doc.data() as any;
-              const date: Timestamp = data.date;
-              const formattedDate = date
-                ? date.toDate().toLocaleDateString()
-                : '';
-
-              return { id: doc.id, ...data, date: formattedDate } as Income;
+              console.log(`data is ${data.date}`);
+              const date: Timestamp = data.date.seconds;
+              console.log('Date: ' + date);
+              const formattedDate = date ? date.toString() : '';
+              // ? date.toDate().toLocaleDateString()
+              // : '';
+              console.log(`formatted data is ${formattedDate}`);
+              const incomeObject = {
+                id: doc.id,
+                ...data,
+                // date: formattedDate,
+              } as Income;
+              console.log('Fetched Income Item:', incomeObject); // Add this line
+              return incomeObject;
             });
+            return incomes;
           })
         );
       })

@@ -1,5 +1,5 @@
-<div class="container">
-  <!-- About Me -->
+<div class="container" *ngIf="userData">
+  <!--about me-->
   <div class="row my-4">
     <div class="card border-0">
       <div class="card-body">
@@ -10,23 +10,15 @@
 
         <div class="row text-center">
           <h6 class="col">Legal name</h6>
-          <p class="col text-end">XXXXX</p>
+          <p class="col text-end">{{ userData.fname }} {{ userData.lname }}</p>
           <div class="col">
             <button class="btn btn-primary btn-sm">Update</button>
           </div>
         </div>
 
-        <!-- <div class="row text-center">
-          <h6 class="col">Date of Birth</h6>
-          <p class="col text-end">XXXXX</p>
-          <div class="col">
-            <button class="btn btn-primary">Update</button>
-          </div>
-        </div> -->
-
         <div class="row text-center">
           <h6 class="col">Annual Income</h6>
-          <p class="col text-end">XXXXX</p>
+          <p class="col text-end">--</p>
           <div class="col">
             <button class="btn btn-primary btn-sm">Update</button>
           </div>
@@ -34,7 +26,7 @@
 
         <div class="row text-center">
           <h6 class="col">Budget Plan</h6>
-          <p class="col text-end">XXXXX</p>
+          <p class="col text-end">50/30/20</p>
           <div class="col">
             <button class="btn btn-primary btn-sm">Update</button>
           </div>
@@ -43,7 +35,7 @@
     </div>
   </div>
 
-  <!-- Contact -->
+  <!--contact-->
   <div class="row">
     <div class="card border-0">
       <div class="card-body">
@@ -51,26 +43,9 @@
           <h3>Contact Info</h3>
           <hr />
         </div>
-
-        <!-- <div class="row text-center">
-          <h6 class="col">Home Address</h6>
-          <p class="col text-end">XXXXX</p>
-          <div class="col">
-            <button class="btn btn-primary">Update</button>
-          </div>
-        </div> -->
-
-        <div class="row text-center">
-          <h6 class="col">Phone Number</h6>
-          <p class="col text-end">XXXXX</p>
-          <div class="col">
-            <button class="btn btn-primary btn-sm">Update</button>
-          </div>
-        </div>
-
         <div class="row text-center">
           <h6 class="col">Email Address</h6>
-          <p class="col text-end">XXXXX</p>
+          <p class="col text-end">{{ userData.email }}</p>
           <div class="col">
             <button class="btn btn-primary btn-sm">Update</button>
           </div>
