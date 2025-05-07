@@ -1,7 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { ChartData, ChartOptions } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
+import { ExpenseService } from '../../Services/Expense Service/expense.service';
+import { Expense } from '../../expense';
+import { inject } from '@angular/core';
+import { IncomeService } from '../../Services/Income Service/income.service';
+import { Income } from '../../income';
+import { TotalIncomeService } from '../../Services/Total-Income Service/total-income.service';
 
 
 @Component({
@@ -11,7 +17,45 @@ import { NgChartsModule } from 'ng2-charts';
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent {
+
+//  private incomeService = inject(IncomeService);
+ private expenseService = inject(ExpenseService);
+//  private TotalIncome = inject(TotalIncomeService);
+
+  // totalIncome: number = 0;
+
+  expense: Expense = { id: '', date: new Date(), source: '', amount: 0};
+  // income: Income = {id: '', date: new Date(), source: '', amount: 0};
+
+  // incomes: Income[] = [];
+  expenses: Expense[] = [];
+
+  ngOnInitExpense() {
+    this.expenseService.getExpenseList().subscribe(expense => this.expenses = expense);
+    // this.TotalIncome.totalIncome$.subscribe(total => this.totalIncome = total);
+    // this.incomeService.getIncomeList().subscribe(income => this.incomes = income);
+
+  }
+
+//   ngOnInitTotal() {
+//     this.TotalIncome.totalIncome$.subscribe(total => this.totalIncome = total);  
+    
+//     }
+
+
+// ngOnInitIncome() {
+//     this.incomeService.getIncomeList().subscribe(income => this.incomes = income);
+
+//     }
+
   
+
+
+
+
+
+
+
   pieChartData: ChartData<'pie', number[]> = {
     labels: ['Rent', 'Groceries', 'Fun'],
     datasets: [
@@ -62,4 +106,6 @@ barChartOptions: ChartOptions<'bar'> = {
     }
   }
 };
+
+
 }
