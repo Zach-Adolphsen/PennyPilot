@@ -17,11 +17,36 @@ export class IncomeListComponent implements OnInit {
   incomeList$: Observable<Income[]> = this.incomeService.getIncomeList();
   private incomeAddedSubscription!: Subscription;
 
+  // ngOnInit(): void {
+  //   // this.incomeAddedSubscription = this.incomeService.incomeAdded$.subscribe(
+  //   //   () => {
+  //   //     this.incomeList$ = this.incomeService.getIncomeList(); // Refresh the list
+  //   //     this.incomeList$.subscribe((data) =>
+  //   //       console.log('Income List Data:', data)
+  //   //     );
+  //   //   }
+  //   // );
+  //   // this.incomeList$.subscribe((data) =>
+  //   //   console.log('Initial Income List Data:', data)
+  //   // );
+  //   this.incomeAddedSubscription = this.incomeService.incomeAdded$.subscribe(
+  //     () => {
+  //       this.incomeList$ = this.incomeService.getIncomeList(); // Refresh the list
+  //     }
+  //   );
+  // }
   ngOnInit(): void {
     this.incomeAddedSubscription = this.incomeService.incomeAdded$.subscribe(
       () => {
-        this.incomeList$ = this.incomeService.getIncomeList(); // Refresh the list
+        this.incomeList$ = this.incomeService.getIncomeList();
+        this.incomeList$.subscribe((data) =>
+          console.log('Income List Data (after add):', data)
+        );
       }
+    );
+    this.incomeList$ = this.incomeService.getIncomeList(); // Initial load
+    this.incomeList$.subscribe((data) =>
+      console.log('Income List Data (initial):', data)
     );
   }
 
@@ -39,15 +64,19 @@ export class IncomeListComponent implements OnInit {
 
   editIncome(income: Income): void {
     this.editingIncome = { ...income };
+    console.log('Editing Income:', this.editingIncome);
+    console.log('Current incomeList$ (before edit):', this.incomeList$);
   }
 
   saveIncome(): void {
     if (this.editingIncome) {
+      console.log('Saving Income:', this.editingIncome);
       this.incomeService.updateIncome(this.editingIncome).subscribe({
         next: () => {
           console.log('Income updated:', this.editingIncome);
           this.editingIncome = null;
           this.incomeList$ = this.incomeService.getIncomeList(); // Refresh the list
+          this.incomeList$.subscribe(data => console.log('Income List Data (after save):', data));
         },
         error: (error) => {
           console.error('Error updating income:', error);

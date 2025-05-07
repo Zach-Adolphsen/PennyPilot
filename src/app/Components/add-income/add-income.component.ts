@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { IncomeService } from '../../Services/Income Service/income.service';
 import {
   FormBuilder,
@@ -10,7 +10,8 @@ import {
 } from '@angular/forms';
 import { Income } from '../../income';
 import { AuthService } from '../../auth-service.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { TotalIncomeService } from '../../Services/Total-Income Service/total-income.service';
 
 // Custom validator function for four-digit year
 function fourDigitYearValidator(
@@ -34,9 +35,10 @@ function fourDigitYearValidator(
   templateUrl: './add-income.component.html',
   styleUrl: './add-income.component.css',
 })
-export class AddIncomeComponent {
+export class AddIncomeComponent implements OnInit {
   private incomeService = inject(IncomeService);
   private authService = inject(AuthService);
+  private totalIncomeService = inject(TotalIncomeService);
 
   incomeForm!: FormGroup<{
     id: FormControl<string | null>;
@@ -46,6 +48,8 @@ export class AddIncomeComponent {
   }>;
 
   constructor(private fb: FormBuilder) {}
+  totalIncome: number = 0;
+  totalIncomeSubscription: Subscription | undefined;
 
   ngOnInit(): void {
     this.incomeForm = this.fb.group<{
@@ -62,6 +66,24 @@ export class AddIncomeComponent {
         Validators.min(0.01),
       ]),
     });
+
+    this.incomeService.getTotalIncome().subscribe((total) => {
+      this.totalIncomeService.setInitialTotal(total);
+    });
+
+    this.totalIncomeSubscription =
+      this.totalIncomeService.totalIncome$.subscribe((total) => {
+        this.totalIncome = total;
+        console.log(
+          'Updated Total Income in AddIncomeComponent: ' + this.totalIncome
+        );
+      });
+  }
+
+  ngOnDestroy(): void {
+    if (this.totalIncomeSubscription) {
+      this.totalIncomeSubscription.unsubscribe();
+    }
   }
 
   private markAllAsTouched(): void {
