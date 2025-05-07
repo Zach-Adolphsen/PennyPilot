@@ -30,4 +30,36 @@ export class DashboardComponent {
       }
     }
   };
+
+  // Bar Chart Data
+barChartData: ChartData<'bar'> = {
+  labels: ['January', 'February', 'March'],
+  datasets: [
+    {
+      label: 'Income',
+      data: [500, 700, 600],
+      backgroundColor: '#42A5F5'
+    },
+    {
+      label: 'Expenses',
+      data: [300, 400, 350],
+      backgroundColor: '#FFA726'
+    }
+  ]
+};
+
+// Bar Chart Options
+barChartOptions: ChartOptions<'bar'> = {
+  responsive: true,
+  scales: {
+    y: {
+      beginAtZero: true
+    }
+  },
+  plugins: {
+    legend: {
+      position: 'top',
+    }
+  }
+};
 }
