@@ -14,14 +14,23 @@ import {
   User,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { Firestore, doc, setDoc } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Firestore, doc, docData, setDoc } from '@angular/fire/firestore';
+import { map, Observable, of, switchMap } from 'rxjs';
 
 export interface UserInfo {
   fname: string;
   lname: string;
   email: string;
   password: string;
+}
+
+export interface CombinedUser {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  fname?: string;
+  lname?: string;
+  createdAt?: Date;
 }
 
 @Injectable({
@@ -109,5 +118,23 @@ export class AuthService {
 
   getUser(): Observable<User | null> {
     return this.currentUser$;
+  }
+
+  getCompleteUser(): Observable<CombinedUser | null> {
+    return this.currentUser$.pipe(
+      switchMap((authUser) => {
+        if (!authUser) return of(null);
+
+        const userRef = doc(this.firestore, 'users', authUser.uid);
+        return docData(userRef).pipe(
+          map((firestoreUser) => ({
+            uid: authUser.uid,
+            email: authUser.email,
+            displayName: authUser.displayName,
+            ...(firestoreUser || {}),
+          }))
+        );
+      })
+    );
   }
 }
