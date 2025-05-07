@@ -48,7 +48,7 @@ export class IncomeService {
     return this.getIncomeList().pipe(
       map((incomes) => {
         return incomes.reduce(
-          (total, income) => total + (income.amount || 0),
+          (total, income) => total + Number(income.amount || 0), // Explicitly convert to Number
           0
         );
       })
