@@ -30,14 +30,13 @@
     <!-- chart (wip) -->
     <!-- replace with real chart later, struggling to figure out dynamic chart building plugin(angular has native chart software, will probably figure it out later) -->
     <!-- Chart Placeholder -->
-    <div class="col-lg-6 d-flex justify-content-center align-items-center">
+    <div class="col-lg-6 d-flex justify-content-center align-items-center" style="width: 400px; height: 400px;">
       <!-- Replace with real chart later -->
-      <img
-        src="https://media1.tenor.com/m/xDKmOyBg0h4AAAAd/emoji-feet.gif"
-        alt="burh"
-        class="img-fluid"
-        style="max-width: 300px"
-      />
+      <canvas baseChart
+        [data]="pieChartData"
+        [options]="pieChartOptions"
+        [type]="'pie'">
+      </canvas>
     </div>
   </div>
 
