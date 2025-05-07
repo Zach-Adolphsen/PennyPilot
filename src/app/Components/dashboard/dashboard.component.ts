@@ -18,22 +18,22 @@ import { TotalIncomeService } from '../../Services/Total-Income Service/total-in
 })
 export class DashboardComponent {
 
-//  private incomeService = inject(IncomeService);
+private incomeService = inject(IncomeService);
  private expenseService = inject(ExpenseService);
 //  private TotalIncome = inject(TotalIncomeService);
 
   // totalIncome: number = 0;
 
   expense: Expense = { id: '', date: new Date(), source: '', amount: 0};
-  // income: Income = {id: '', date: new Date(), source: '', amount: 0};
+ income: Income = {id: '', date: new Date(), source: '', amount: 0};
 
-  // incomes: Income[] = [];
+ incomes: Income[] = [];
   expenses: Expense[] = [];
 
-  ngOnInitExpense() {
+  ngOnInit() {
     this.expenseService.getExpenseList().subscribe(expense => this.expenses = expense);
     // this.TotalIncome.totalIncome$.subscribe(total => this.totalIncome = total);
-    // this.incomeService.getIncomeList().subscribe(income => this.incomes = income);
+   this.incomeService.getIncomeList().subscribe(income => this.incomes = income);
 
   }
 

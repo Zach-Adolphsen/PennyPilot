@@ -8,19 +8,20 @@
           <div class="row">
             <div class="col">
               <h6>Income</h6>
-              <!-- <ul class="list-unstyled">
+              <ul class="list-unstyled">
                 @for (income of incomes; track income.id) {
                   <p> {{$index + 1}} : {{income.date}} : {{ income.source}} : ${{income.amount}} </p>
                 }
-              </ul> -->
+              </ul> 
             </div>
             <div class="col">
               <h6>Expenses</h6>
               <ul class="list-unstyled">
                 @for (expense of expenses; track expense.id) {
-                  <p> {{$index + 1}} : {{expense.date}} : {{ expense.source}} : ${{expense.amount}} </p>
+                  <li> {{$index + 1}} : {{ expense.date}} : {{ expense.source }} : ${{ expense.amount }} </li>
                 }
               </ul>
+              
             </div>
           </div>
         </div>
