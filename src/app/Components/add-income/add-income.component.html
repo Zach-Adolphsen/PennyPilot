@@ -6,50 +6,54 @@
     </div>
 
     <form [formGroup]="incomeForm" (ngSubmit)="onAddIncome()">
-      <h6>Date</h6>
+
+      <!-- Date -->
       <div class="input-group mb-3">
-        <input type="date" class="form-control" formControlName="date" />
-        @if (incomeForm.controls.date.touched &&
-        incomeForm.controls.date.errors?.['required']) {
+        <label for="income-date" class="visually-hidden">Date</label>
+        <input
+          id="income-date"
+          type="date"
+          class="form-control"
+          formControlName="date"
+        />
+        @if (incomeForm.controls.date.touched && incomeForm.controls.date.errors?.['required']) {
         <div class="text-danger">Date is required</div>
-        } @if (incomeForm.controls.date.touched &&
-        incomeForm.controls.date.errors?.['fourDigitYear']) {
-        <div class="text-danger">
-          Please enter the date with a four-digit year
-        </div>
+        } @if (incomeForm.controls.date.touched && incomeForm.controls.date.errors?.['fourDigitYear']) {
+        <div class="text-danger">Please enter the date with a four-digit year</div>
         }
       </div>
-      <h6>Source</h6>
+
+      <!-- Source -->
       <div class="input-group mb-3">
+        <label for="income-source" class="visually-hidden">Source</label>
         <input
+          id="income-source"
           type="text"
           class="form-control"
-          aria-label="Amount"
           placeholder="(Primary Income, Secondary Income, Venmo, etc.)"
           formControlName="source"
         />
-        @if (incomeForm.controls.source.touched &&
-        incomeForm.controls.source.errors?.['required']) {
+        @if (incomeForm.controls.source.touched && incomeForm.controls.source.errors?.['required']) {
         <div class="text-danger">Source is required</div>
         }
       </div>
-      <h6>Amount</h6>
+
+      <!-- Amount -->
       <div class="input-group mb-3">
         <div class="input-group-prepend">
           <span class="input-group-text">$</span>
         </div>
+        <label for="income-amount" class="visually-hidden">Amount</label>
         <input
+          id="income-amount"
           type="number"
           class="form-control"
-          aria-label="Amount"
           placeholder="1234.56  |  Note: DO NOT USE A '$'"
           formControlName="amount"
         />
-        @if (incomeForm.controls.amount.touched &&
-        incomeForm.controls.amount.errors?.['required']) {
+        @if (incomeForm.controls.amount.touched && incomeForm.controls.amount.errors?.['required']) {
         <div class="text-danger">Amount is required</div>
-        } @if (incomeForm.controls.amount.touched &&
-        incomeForm.controls.amount.errors?.['min']) {
+        } @if (incomeForm.controls.amount.touched && incomeForm.controls.amount.errors?.['min']) {
         <div class="text-danger">Amount must be greater than 0</div>
         }
       </div>
