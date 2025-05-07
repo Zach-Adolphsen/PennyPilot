@@ -15,17 +15,20 @@ import { Observable, from, switchMap, map, Subject } from 'rxjs';
 import { AuthService } from '../../auth-service.service';
 import { inject } from '@angular/core'; // Import inject
 import { orderBy, query, Timestamp } from 'firebase/firestore';
+import { TotalIncomeService } from '../Total-Income Service/total-income.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IncomeService {
   private firestore: Firestore = inject(Firestore); // Inject Firestore
+  private totalIncomeService = inject(TotalIncomeService);
+  private authService = inject(AuthService);
 
   private incomeSourceAdded = new Subject<void>();
   incomeAdded$ = this.incomeSourceAdded.asObservable();
 
-  constructor(private authService: AuthService) {}
+  constructor() {}
 
   private getUserIncomeCollection(): Observable<
     CollectionReference<DocumentData>
@@ -36,7 +39,18 @@ export class IncomeService {
           throw new Error('User not authenticated');
         }
         const userDoc = doc(this.firestore, 'users', user.uid);
-        return collection(userDoc, 'income-expense');
+        return collection(userDoc, 'IncomeList');
+      })
+    );
+  }
+
+  getTotalIncome(): Observable<number> {
+    return this.getIncomeList().pipe(
+      map((incomes) => {
+        return incomes.reduce(
+          (total, income) => total + (income.amount || 0),
+          0
+        );
       })
     );
   }
@@ -48,6 +62,7 @@ export class IncomeService {
         return from(addDoc(incomeCollection, incomeData)).pipe(
           map((docRef) => {
             this.incomeSourceAdded.next(); // Notify that income was added
+            this.totalIncomeService.updateTotal();
             return docRef.id;
           })
         );
