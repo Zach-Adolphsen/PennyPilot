@@ -47,7 +47,7 @@
           <p>Edit</p>
         </a>
       </div>
-      <div class="col-1" (click)="onDeleteIncome(income.id)">
+      <div class="col-1" (click)="income.id && onDeleteIncome(income.id)">
         <button class="btn">
           <svg
             xmlns="http://www.w3.org/2000/svg"
