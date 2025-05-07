@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { IncomeService } from '../../Services/Income Service/income.service';
 import {
   FormBuilder,
   FormControl,
@@ -8,9 +7,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Income } from '../../income';
+import { Expense } from '../../expense';
 import { AuthService } from '../../auth-service.service';
-import { Observable } from 'rxjs';
+import { ExpenseService } from '../../Services/Expense Service/expense.service';
 
 // Custom validator function for four-digit year
 function fourDigitYearValidator(
@@ -28,17 +27,17 @@ function fourDigitYearValidator(
 }
 
 @Component({
-  selector: 'app-add-income',
+  selector: 'app-add-expense',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule],
-  templateUrl: './add-income.component.html',
-  styleUrl: './add-income.component.css',
+  templateUrl: './add-expense.component.html',
+  styleUrl: './add-expense.component.css',
 })
-export class AddIncomeComponent {
-  private incomeService = inject(IncomeService);
+export class AddExpenseComponent {
+  private expenseService = inject(ExpenseService);
   private authService = inject(AuthService);
 
-  incomeForm!: FormGroup<{
+  expenseForm!: FormGroup<{
     id: FormControl<string | null>;
     date: FormControl<string | null>;
     source: FormControl<string | null>;
@@ -48,7 +47,7 @@ export class AddIncomeComponent {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    this.incomeForm = this.fb.group<{
+    this.expenseForm = this.fb.group<{
       id: FormControl<string | null>;
       date: FormControl<string | null>;
       source: FormControl<string | null>;
@@ -65,30 +64,30 @@ export class AddIncomeComponent {
   }
 
   private markAllAsTouched(): void {
-    Object.values(this.incomeForm.controls).forEach((control) => {
+    Object.values(this.expenseForm.controls).forEach((control) => {
       control.markAsTouched();
     });
   }
 
-  onAddIncome() {
-    const dateString = this.incomeForm.controls.date.value!;
+  onAddExpense() {
+    const dateString = this.expenseForm.controls.date.value!;
     const [year, month, day] = dateString.split('-').map(Number);
-    if (this.incomeForm.valid) {
-      const newIncome: Income = {
+    if (this.expenseForm.valid) {
+      const newExpense: Expense = {
         id: '', // Firestore will generate the ID
         date: new Date(year, month - 1, day),
-        source: this.incomeForm.controls.source.value!,
-        amount: this.incomeForm.controls.amount.value!,
+        source: this.expenseForm.controls.source.value!,
+        amount: this.expenseForm.controls.amount.value!,
       };
-      console.log(newIncome.date);
+      console.log(newExpense.date);
 
-      this.incomeService.addIncome(newIncome).subscribe({
+      this.expenseService.addExpense(newExpense).subscribe({
         next: (newId) => {
-          console.log('Income added with ID:', newId);
-          this.incomeForm.reset();
+          console.log('Expense added with ID:', newId);
+          this.expenseForm.reset();
         },
         error: (error) => {
-          console.error('Error adding income:', error);
+          console.error('Error adding expense:', error);
         },
       });
     } else {
