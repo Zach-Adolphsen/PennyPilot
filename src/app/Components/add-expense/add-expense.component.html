@@ -1,69 +1,71 @@
 <div class="card shadow-sm">
-    <div class="card-body">
-      <div class="card-title">
-        <h3>Add Expense</h3>
-        <hr />
-      </div>
-  
-      <form [formGroup]="expenseForm" (ngSubmit)="onAddExpense()">
-        <h6>Date</h6>
-        <div class="input-group mb-3">
-          <input type="date" class="form-control" formControlName="date" />
-          @if (expenseForm.controls.date.touched &&
-          expenseForm.controls.date.errors?.['required']) {
-          <div class="text-danger">Date is required</div>
-          } @if (expenseForm.controls.date.touched &&
-          expenseForm.controls.date.errors?.['fourDigitYear']) {
-          <div class="text-danger">
-            Please enter the date with a four-digit year
-          </div>
-          }
-        </div>
-        <h6>Source</h6>
-        <div class="input-group mb-3">
-          <input
-            type="text"
-            class="form-control"
-            aria-label="Amount"
-            placeholder="(Primary Expense, Secondary Expense, Venmo, etc.)"
-            formControlName="source"
-          />
-          @if (expenseForm.controls.source.touched &&
-          expenseForm.controls.source.errors?.['required']) {
-          <div class="text-danger">Source is required</div>
-          }
-        </div>
-        <h6>Amount</h6>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text">$</span>
-          </div>
-          <input
-            type="number"
-            class="form-control"
-            aria-label="Amount"
-            placeholder="1234.56  |  Note: DO NOT USE A '$'"
-            formControlName="amount"
-          />
-          @if (expenseForm.controls.amount.touched &&
-          expenseForm.controls.amount.errors?.['required']) {
-          <div class="text-danger">Amount is required</div>
-          } @if (expenseForm.controls.amount.touched &&
-          expenseForm.controls.amount.errors?.['min']) {
-          <div class="text-danger">Amount must be greater than 0</div>
-          }
-        </div>
-  
-        <button
-          type="submit"
-          class="btn btn-primary"
-          [disabled]="!expenseForm.valid"
-        >
-          <p class="my-1">Add Expense</p>
-        </button>
-      </form>
+  <div class="card-body">
+    <div class="card-title">
+      <h3>Add Expense</h3>
+      <hr />
     </div>
+
+    <form [formGroup]="expenseForm" (ngSubmit)="onAddExpense()">
+      <!-- Date -->
+      <h6>Date</h6>
+      <div class="input-group mb-3">
+        <input type="date" class="form-control" formControlName="date" />
+        @if (expenseForm.controls.date.touched &&
+        expenseForm.controls.date.errors?.['required']) {
+        <div class="text-danger">Date is required</div>
+        } @if (expenseForm.controls.date.touched &&
+        expenseForm.controls.date.errors?.['fourDigitYear']) {
+        <div class="text-danger">
+          Please enter the date with a four-digit year
+        </div>
+        }
+      </div>
+
+      <!-- Source -->
+      <h6>Source</h6>
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          class="form-control"
+          aria-label="Amount"
+          placeholder="(Primary Expense, Secondary Expense, Venmo, etc.)"
+          formControlName="source"
+        />
+        @if (expenseForm.controls.source.touched &&
+        expenseForm.controls.source.errors?.['required']) {
+        <div class="text-danger">Source is required</div>
+        }
+      </div>
+
+      <!-- Amount -->
+      <h6>Amount</h6>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">$</span>
+        </div>
+        <input
+          type="number"
+          class="form-control"
+          aria-label="Amount"
+          placeholder="1234.56  |  Note: DO NOT USE A '$'"
+          formControlName="amount"
+        />
+        @if (expenseForm.controls.amount.touched &&
+        expenseForm.controls.amount.errors?.['required']) {
+        <div class="text-danger">Amount is required</div>
+        } @if (expenseForm.controls.amount.touched &&
+        expenseForm.controls.amount.errors?.['min']) {
+        <div class="text-danger">Amount must be greater than 0</div>
+        }
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="!expenseForm.valid"
+      >
+        <p class="my-1">Add Expense</p>
+      </button>
+    </form>
   </div>
-  
-
-
+</div>
