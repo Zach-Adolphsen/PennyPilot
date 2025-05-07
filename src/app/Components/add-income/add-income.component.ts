@@ -16,8 +16,9 @@ function fourDigitYearValidator(
   control: FormControl
 ): { [key: string]: any } | null {
   const value = control.value;
+  console.log('4DigitYearValidator: ' + value); //testing purposes
   if (value && typeof value === 'string') {
-    const yearPart = value.substring(0, 4); // Assuming YYYY-MM-DD format
+    const yearPart = value.substring(0, 4); // Assuming format YYYY-MM-DD
     if (yearPart.length !== 4 || isNaN(parseInt(yearPart, 10))) {
       return { fourDigitYear: true };
     }
@@ -69,19 +70,21 @@ export class AddIncomeComponent {
   }
 
   onAddIncome() {
+    const dateString = this.incomeForm.controls.date.value!;
+    const [year, month, day] = dateString.split('-').map(Number);
     if (this.incomeForm.valid) {
       const newIncome: Income = {
         id: '', // Firestore will generate the ID
-        date: new Date(this.incomeForm.controls.date.value!),
+        date: new Date(year, month - 1, day),
         source: this.incomeForm.controls.source.value!,
         amount: this.incomeForm.controls.amount.value!,
       };
+      console.log(newIncome.date);
 
       this.incomeService.addIncome(newIncome).subscribe({
         next: (newId) => {
           console.log('Income added with ID:', newId);
           this.incomeForm.reset();
-          // Optionally, update your local income list if you're displaying it elsewhere
         },
         error: (error) => {
           console.error('Error adding income:', error);
