@@ -2,14 +2,12 @@ import { Component, inject, OnInit } from '@angular/core';
 import { IncomeService } from '../../Services/Income Service/income.service';
 import { Income } from '../../income';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { AddIncomeComponent } from '../add-income/add-income.component';
 
 @Component({
   selector: 'app-income-list',
-  imports: [FormsModule, AsyncPipe, AddIncomeComponent],
+  imports: [FormsModule, AsyncPipe],
   templateUrl: './income-list.component.html',
   styleUrl: './income-list.component.css',
 })
@@ -53,7 +51,6 @@ export class IncomeListComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error updating income:', error);
-          // Handle error appropriately
         },
       });
     }

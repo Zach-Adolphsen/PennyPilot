@@ -67,12 +67,6 @@ export class AuthService {
         createdAt: new Date(),
       });
 
-      // // Create income and expense entry
-      // await setDoc(doc(this.firestore, 'income-expense', user.uid), {
-      //   income: [],
-      //   expenses: [],
-      // });
-
       alert('Registration Successful');
       this.router.navigate(['/login']);
     } catch (err: any) {
