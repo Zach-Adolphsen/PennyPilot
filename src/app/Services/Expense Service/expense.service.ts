@@ -1,23 +1,4 @@
-import { inject, Injectable } from '@angular/core';
-import {
-  CollectionReference,
-  DocumentData,
-  Firestore,
-} from '@angular/fire/firestore';
-import { from, map, Observable, Subject, switchMap } from 'rxjs';
-import { AuthService } from '../../auth-service.service';
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  orderBy,
-  query,
-  Timestamp,
-  updateDoc,
-} from 'firebase/firestore';
-import { Expense } from '../../expense';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
