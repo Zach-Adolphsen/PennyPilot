@@ -48,7 +48,7 @@ export class IncomeService {
     return this.getIncomeList().pipe(
       map((incomes) => {
         return incomes.reduce(
-          (total, income) => total + (income.amount || 0),
+          (total, income) => total + Number(income.amount || 0), // Explicitly convert to Number
           0
         );
       })
@@ -89,23 +89,23 @@ export class IncomeService {
   getIncomeList(): Observable<Income[]> {
     return this.getUserIncomeCollection().pipe(
       switchMap((incomeCollection) => {
-        const orderedCollection = query(incomeCollection, orderBy('date'));
+        const orderedCollection = query(
+          incomeCollection,
+          orderBy('date', 'desc')
+        );
         return from(getDocs(orderedCollection)).pipe(
           map((snapshot) => {
             const incomes = snapshot.docs.map((doc) => {
               const data = doc.data() as any;
-              console.log(`Date is ${data.date}`);
-              const date: Timestamp = data.date as Timestamp; // Corrected line
+              const date: Timestamp = data.date as Timestamp;
               const formattedDate = date
                 ? date.toDate().toLocaleDateString()
                 : '';
-              console.log(`formatted data is ${formattedDate}`);
               const incomeObject = {
                 id: doc.id,
                 ...data,
                 date: formattedDate,
               } as Income;
-              console.log('Fetched Income Item:', incomeObject);
               return incomeObject;
             });
             return incomes;

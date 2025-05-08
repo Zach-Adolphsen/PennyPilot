@@ -10,13 +10,14 @@ import {
 import { Expense } from '../../expense';
 import { AuthService } from '../../auth-service.service';
 import { ExpenseService } from '../../Services/Expense Service/expense.service';
+import { Timestamp } from 'firebase/firestore';
 
 // Custom validator function for four-digit year
 function fourDigitYearValidator(
   control: FormControl
 ): { [key: string]: any } | null {
   const value = control.value;
-  console.log('4DigitYearValidator: ' + value); //testing purposes
+  // console.log('4DigitYearValidator: ' + value); //testing purposes
   if (value && typeof value === 'string') {
     const yearPart = value.substring(0, 4); // Assuming format YYYY-MM-DD
     if (yearPart.length !== 4 || isNaN(parseInt(yearPart, 10))) {
@@ -75,11 +76,14 @@ export class AddExpenseComponent {
     if (this.expenseForm.valid) {
       const newExpense: Expense = {
         id: '', // Firestore will generate the ID
-        date: new Date(year, month - 1, day),
+        // date: new Date(year, month - 1, day),
+        date: Timestamp.fromDate(new Date(year, month - 1, day)).toDate(), // Save as Date
         source: this.expenseForm.controls.source.value!,
         amount: this.expenseForm.controls.amount.value!,
       };
-      console.log(newExpense.date);
+      console.log(
+        'OnAddExpense() newExpense.date: ' + newExpense.date?.valueOf()
+      );
 
       this.expenseService.addExpense(newExpense).subscribe({
         next: (newId) => {
