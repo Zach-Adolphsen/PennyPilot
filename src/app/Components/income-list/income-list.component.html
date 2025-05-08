@@ -5,6 +5,7 @@
       <hr />
     </div>
   </div>
+  <!-- HEADER ROW -->
   <div class="container">
     <div class="row mx-1">
       <div class="col-3">
@@ -18,6 +19,8 @@
       </div>
       <hr />
     </div>
+
+    <!-- LIST OF EACH INCOME INSTANCE -->
     @for (income of incomeList$ | async; track $index;) { @if(editingIncome?.id
     != income.id){
     <div class="row mx-1">
@@ -79,7 +82,7 @@
         [(ngModel)]="editingIncome.source"
       />
       <input
-        type="text"
+        type="number"
         class="form-control"
         [(ngModel)]="editingIncome.amount"
       />

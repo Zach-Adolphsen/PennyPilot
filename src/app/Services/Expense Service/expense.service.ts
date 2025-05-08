@@ -1,23 +1,28 @@
-import { Injectable } from '@angular/core';
-import { Expense } from '../../expense';
+import { inject, Injectable } from '@angular/core';
 import {
-  collection,
-  doc,
-  addDoc,
-  getDocs,
-  deleteDoc,
-  updateDoc,
   CollectionReference,
   DocumentData,
   Firestore,
+
   collectionData,
   limit, // Import from AngularFire
 } from '@angular/fire/firestore';
 import { Observable, from, switchMap, map, Subject, combineLatest } from 'rxjs';
+
 import { AuthService } from '../../auth-service.service';
-import { inject } from '@angular/core'; // Import inject
-import { orderBy, query, Timestamp } from 'firebase/firestore'; // Import Timestamp
-import { TotalExpenseService } from '../Total-Expense Service/total-expense.service';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  Timestamp,
+  updateDoc,
+} from 'firebase/firestore';
+import { Expense } from '../../expense';
+import { TotalExpenseService } from '../Total-Expense/total-expense.service';
 
 @Injectable({
   providedIn: 'root',
@@ -75,7 +80,7 @@ export class ExpenseService {
         };
         return from(addDoc(expenseCollection, expenseDataWithTimestamp)).pipe(
           switchMap((docRef) => {
-            this.expenseSourceAdded.next(); // Notify that expense was added
+            this.expenseSourceAdded.next(); // Notify that income was added
             return this.getTotalExpense().pipe(
               map((total) => {
                 this.totalExpenseService.updateTotal(total); // Update the total
@@ -91,28 +96,37 @@ export class ExpenseService {
   getExpenseList(): Observable<Expense[]> {
     return this.getUserExpenseCollection().pipe(
       switchMap((expenseCollection) => {
-        const orderedCollection = query(expenseCollection, orderBy('date'));
+        const orderedCollection = query(
+          expenseCollection,
+          orderBy('date', 'desc')
+        );
         return from(getDocs(orderedCollection)).pipe(
           map((snapshot) => {
             const expenses = snapshot.docs.map((doc) => {
               const data = doc.data() as any;
-              console.log(`Date is ${data.date}`);
-              const date: Timestamp = data.date as Timestamp; // Corrected line
+              const date: Timestamp = data.date as Timestamp;
               const formattedDate = date
                 ? date.toDate().toLocaleDateString()
                 : '';
-              console.log(`formatted data is ${formattedDate}`);
-              const expenseObject = {
+              const incomeObject = {
                 id: doc.id,
                 ...data,
                 date: formattedDate,
               } as Expense;
-              console.log('Fetched Expense Item:', expenseObject);
-              return expenseObject;
+              return incomeObject;
             });
             return expenses;
           })
         );
+      })
+    );
+  }
+
+  deleteExpense(expenseId: string): Observable<void> {
+    return this.getUserExpenseCollection().pipe(
+      switchMap((expenseCollection) => {
+        const expenseDocument = doc(expenseCollection, expenseId);
+        return from(deleteDoc(expenseDocument));
       })
     );
   }
@@ -140,6 +154,7 @@ export class ExpenseService {
       })
     );
   }
+
 
   deleteExpense(expenseId: string): Observable<void> {
     return this.getUserExpenseCollection().pipe(
@@ -201,4 +216,5 @@ export class ExpenseService {
       })
     );
   }
+
 }

@@ -1,3 +1,4 @@
+
 import { Component, inject, OnInit } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
@@ -9,6 +10,7 @@ import { Income } from '../../income';
 import { CommonModule } from '@angular/common';
 import { MoneySavedComponent } from '../money-saved/money-saved.component';
 import { forkJoin } from 'rxjs';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -22,6 +24,7 @@ import { forkJoin } from 'rxjs';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
+
 export class DashboardComponent implements OnInit {
   private IncomeService = inject(IncomeService);
   private ExpenseService = inject(ExpenseService);
@@ -33,11 +36,14 @@ export class DashboardComponent implements OnInit {
   recentIncomes: Income[] = [];
   recentExpenses: Expense[] = [];
 
+
   pieChartData: ChartData<'pie', number[]> = {
     labels: ['Rent', 'Groceries', 'Fun'],
     datasets: [
       {
+
         data: [450, 300, 200],
+
         backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
       },
     ],
@@ -50,6 +56,7 @@ export class DashboardComponent implements OnInit {
         position: 'top',
       },
     },
+
   };
 
   barChartData: ChartData<'bar'> = {
@@ -68,12 +75,14 @@ export class DashboardComponent implements OnInit {
     ],
   };
 
+
   barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
     scales: {
       y: {
         beginAtZero: true,
       },
+
     },
     plugins: {
       legend: {
@@ -124,4 +133,5 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
+
 }
