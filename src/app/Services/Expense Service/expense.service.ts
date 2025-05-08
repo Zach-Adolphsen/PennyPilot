@@ -3,7 +3,6 @@ import {
   CollectionReference,
   DocumentData,
   Firestore,
-
   collectionData,
   limit, // Import from AngularFire
 } from '@angular/fire/firestore';
@@ -155,15 +154,6 @@ export class ExpenseService {
     );
   }
 
-
-  deleteExpense(expenseId: string): Observable<void> {
-    return this.getUserExpenseCollection().pipe(
-      switchMap((expenseCollection) => {
-        const expenseDocument = doc(expenseCollection, expenseId);
-        return from(deleteDoc(expenseDocument));
-      })
-    );
-  }
   getMonthlyExpense(): Observable<number> {
     return combineLatest([
       this.authService.getCompleteUser(),
@@ -216,5 +206,4 @@ export class ExpenseService {
       })
     );
   }
-
 }
