@@ -47,7 +47,7 @@
           <p>Edit</p>
         </a>
       </div>
-      <div class="col-1" (click)="onDeleteExpense(expense.id)">
+      <div class="col-1" (click)="expense.id && onDeleteExpense(expense.id)">
         <button class="btn">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -79,7 +79,7 @@
         [(ngModel)]="editingExpense.source"
       />
       <input
-        type="text"
+        type="number"
         class="form-control"
         [(ngModel)]="editingExpense.amount"
       />
