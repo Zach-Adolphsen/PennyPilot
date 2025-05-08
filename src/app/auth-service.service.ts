@@ -17,11 +17,19 @@ import { Router } from '@angular/router';
 import { Firestore, doc, docData, setDoc } from '@angular/fire/firestore';
 import { map, Observable, of, switchMap } from 'rxjs';
 
+// export interface UserInfo {
+//   fname: string;
+//   lname: string;
+//   email: string;
+//   password: string;
+// }
 export interface UserInfo {
   fname: string;
   lname: string;
   email: string;
   password: string;
+  yearlyIncome: number; // NEW
+  [key: string]: any; // <-- Add this to allow dynamic field access
 }
 
 export interface CombinedUser {
@@ -31,6 +39,8 @@ export interface CombinedUser {
   fname?: string;
   lname?: string;
   createdAt?: Date;
+  yearlyIncome?: number;
+  [key: string]: any; // <-- Add this to allow dynamic field access
 }
 
 @Injectable({
@@ -73,6 +83,7 @@ export class AuthService {
         fname: aUser.fname,
         lname: aUser.lname,
         email: aUser.email,
+        yearlyIncome: aUser.yearlyIncome,
         createdAt: new Date(),
       });
 

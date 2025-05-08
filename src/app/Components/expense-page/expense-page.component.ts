@@ -1,11 +1,35 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { ExpenseService } from '../../Services/Expense Service/expense.service';
+import { AuthService } from '../../auth-service.service';
 import { AddExpenseComponent } from '../add-expense/add-expense.component';
 import { ExpenseListComponent } from '../expense-list/expense-list.component';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-expense-page',
-  imports: [AddExpenseComponent, ExpenseListComponent],
+  imports: [AddExpenseComponent, ExpenseListComponent, CurrencyPipe],
   templateUrl: './expense-page.component.html',
-  styleUrl: './expense-page.component.css',
+  styleUrls: ['./expense-page.component.css'],
 })
-export class ExpensePageComponent {}
+export class ExpensePageComponent implements OnInit {
+  yearlyExpense: number = 0;
+  monthlyExpense: number = 0;
+
+  private authService = inject(AuthService);
+  private expenseService = inject(ExpenseService);
+
+  ngOnInit(): void {
+    this.expenseService.getTotalExpense().subscribe((totalExpense) => {
+      this.yearlyExpense = totalExpense;
+    });
+
+    // Calculate monthly expenses
+    this.calculateMonthlyExpense();
+  }
+
+  calculateMonthlyExpense(): void {
+    this.expenseService.getMonthlyExpense().subscribe((monthlyExpense) => {
+      this.monthlyExpense = monthlyExpense;
+    });
+  }
+}

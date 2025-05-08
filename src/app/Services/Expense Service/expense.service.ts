@@ -9,9 +9,11 @@ import {
   updateDoc,
   CollectionReference,
   DocumentData,
-  Firestore, // Import from AngularFire
+  Firestore,
+  collectionData,
+  limit, // Import from AngularFire
 } from '@angular/fire/firestore';
-import { Observable, from, switchMap, map, Subject } from 'rxjs';
+import { Observable, from, switchMap, map, Subject, combineLatest } from 'rxjs';
 import { AuthService } from '../../auth-service.service';
 import { inject } from '@angular/core'; // Import inject
 import { orderBy, query, Timestamp } from 'firebase/firestore'; // Import Timestamp
@@ -144,6 +146,58 @@ export class ExpenseService {
       switchMap((expenseCollection) => {
         const expenseDocument = doc(expenseCollection, expenseId);
         return from(deleteDoc(expenseDocument));
+      })
+    );
+  }
+  getMonthlyExpense(): Observable<number> {
+    return combineLatest([
+      this.authService.getCompleteUser(),
+      this.getExpenseList(),
+    ]).pipe(
+      map(([user, expenseList]) => {
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+
+        const monthlyExpenseTotal = expenseList
+          .filter((expense) => {
+            const expenseDate = new Date(expense.date as string);
+            return (
+              expenseDate.getMonth() === currentMonth &&
+              expenseDate.getFullYear() === currentYear
+            );
+          })
+          .reduce((total, expense) => total + (expense.amount || 0), 0);
+
+        return +monthlyExpenseTotal.toFixed(2);
+      })
+    );
+  }
+  getRecentExpenses(limitCount: number = 3): Observable<Expense[]> {
+    return this.getUserExpenseCollection().pipe(
+      switchMap((expenseCollection) => {
+        const recentExpensesQuery = query(
+          expenseCollection,
+          orderBy('date', 'desc'),
+          limit(limitCount) // Get the most recent expenses
+        );
+        return from(getDocs(recentExpensesQuery)).pipe(
+          map((snapshot) => {
+            const expenses = snapshot.docs.map((doc) => {
+              const data = doc.data() as any;
+              const date: Timestamp = data.date as Timestamp; // Assuming the 'date' is a Timestamp
+              const formattedDate = date
+                ? date.toDate().toLocaleDateString()
+                : '';
+              return {
+                id: doc.id,
+                ...data,
+                date: formattedDate,
+              } as Expense;
+            });
+            return expenses;
+          })
+        );
       })
     );
   }
