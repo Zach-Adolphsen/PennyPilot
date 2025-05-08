@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+  
   totalIncome: number = 0;
   totalIncomeSubscription: Subscription | undefined;
 
