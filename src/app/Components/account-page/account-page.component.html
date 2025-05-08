@@ -1,5 +1,5 @@
 <div class="container" *ngIf="userData">
-  <!--about me-->
+  <!-- About me Section -->
   <div class="row my-4">
     <div class="card border-0">
       <div class="card-body">
@@ -8,49 +8,146 @@
           <hr />
         </div>
 
-        <div class="row text-center">
+        <!-- Legal Name Field -->
+        <div class="row text-center mb-3">
           <h6 class="col">Legal name</h6>
-          <p class="col text-end">{{ userData.fname }} {{ userData.lname }}</p>
+          <p class="col text-end" *ngIf="editingField !== 'legalName'">
+            {{ userData.fname }} {{ userData.lname }}
+          </p>
+          <input
+            *ngIf="editingField === 'legalName'"
+            type="text"
+            [(ngModel)]="updatedValue"
+            class="col text-end"
+          />
           <div class="col">
-            <button class="btn btn-primary btn-sm">Update</button>
+            <button
+              *ngIf="editingField !== 'legalName'"
+              class="btn btn-primary btn-sm"
+              (click)="startEditing('legalName')"
+            >
+              Update
+            </button>
+            <button
+              *ngIf="editingField === 'legalName'"
+              class="btn btn-success btn-sm"
+              (click)="saveEdit()"
+            >
+              Save
+            </button>
           </div>
         </div>
 
-        <div class="row text-center">
+        <!-- Annual Income Field -->
+        <div class="row text-center mb-3">
           <h6 class="col">Annual Income</h6>
-          <p class="col text-end">--</p>
+          <p class="col text-end" *ngIf="editingField !== 'yearlyIncome'">
+            {{ userData.yearlyIncome | currency }}
+          </p>
+          <input
+            *ngIf="editingField === 'yearlyIncome'"
+            type="number"
+            [(ngModel)]="updatedValue"
+            class="col text-end"
+          />
           <div class="col">
-            <button class="btn btn-primary btn-sm">Update</button>
+            <button
+              *ngIf="editingField !== 'yearlyIncome'"
+              class="btn btn-primary btn-sm"
+              (click)="startEditing('yearlyIncome')"
+            >
+              Update
+            </button>
+            <button
+              *ngIf="editingField === 'yearlyIncome'"
+              class="btn btn-success btn-sm"
+              (click)="saveEdit()"
+            >
+              Save
+            </button>
           </div>
         </div>
 
-        <div class="row text-center">
-          <h6 class="col">Budget Plan</h6>
-          <p class="col text-end">50/30/20</p>
+        <!-- Savings Goal Display -->
+        <!-- Savings Goal Section -->
+        <div class="row text-center mb-3">
+          <h6 class="col">Savings Goal (50% of Yearly Income)</h6>
+          <p class="col text-end" *ngIf="editingField !== 'savingsGoal'">
+            ${{ savingsGoal | number : "1.2-2" }}
+          </p>
+          <input
+            *ngIf="editingField === 'savingsGoal'"
+            type="number"
+            [(ngModel)]="updatedValue"
+            class="col text-end"
+          />
           <div class="col">
-            <button class="btn btn-primary btn-sm">Update</button>
+            <button
+              *ngIf="editingField !== 'savingsGoal'"
+              class="btn btn-primary btn-sm"
+              (click)="startEditing('savingsGoal')"
+            >
+              Update
+            </button>
+            <button
+              *ngIf="editingField === 'savingsGoal'"
+              class="btn btn-success btn-sm"
+              (click)="saveEdit()"
+            >
+              Save
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!--contact-->
-  <div class="row">
+  <!-- Contact Info Section -->
+  <div class="row my-4">
     <div class="card border-0">
       <div class="card-body">
         <div class="card-title">
           <h3>Contact Info</h3>
           <hr />
         </div>
-        <div class="row text-center">
+
+        <!-- Email Address Field -->
+        <div class="row text-center mb-3">
           <h6 class="col">Email Address</h6>
-          <p class="col text-end">{{ userData.email }}</p>
+          <p class="col text-end" *ngIf="editingField !== 'email'">
+            {{ userData.email }}
+          </p>
+          <input
+            *ngIf="editingField === 'email'"
+            type="email"
+            [(ngModel)]="updatedValue"
+            class="col text-end"
+          />
           <div class="col">
-            <button class="btn btn-primary btn-sm">Update</button>
+            <button
+              *ngIf="editingField !== 'email'"
+              class="btn btn-primary btn-sm"
+              (click)="startEditing('email')"
+            >
+              Update
+            </button>
+            <button
+              *ngIf="editingField === 'email'"
+              class="btn btn-success btn-sm"
+              (click)="saveEdit()"
+            >
+              Save
+            </button>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Logout Button -->
+  <div class="row my-4">
+    <div class="col text-center">
+      <button class="btn btn-outline-success" (click)="logout()">Logout</button>
     </div>
   </div>
 </div>

@@ -14,6 +14,7 @@ export class RegisterComponent {
     lname: '',
     email: '',
     password: '',
+    yearlyIncome: 0,
   };
 
   private authService = inject(AuthService);
@@ -38,12 +39,21 @@ export class RegisterComponent {
       return;
     }
 
+    if (this.user.yearlyIncome == null) {
+      alert('Please enter your yearly income');
+      return;
+    }
+
+    // Log the user object to verify yearlyIncome value
+    console.log('User data being registered:', this.user);
+
     this.authService.register(this.user);
     this.user = {
       fname: '',
       lname: '',
       email: '',
       password: '',
+      yearlyIncome: 0,
     };
   }
 }
