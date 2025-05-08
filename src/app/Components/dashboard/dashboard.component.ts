@@ -1,3 +1,4 @@
+
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 import { ChartData, ChartOptions } from 'chart.js';
@@ -8,18 +9,21 @@ import { Subscription } from 'rxjs';
 import { TotalExpenseService } from '../../Services/Total-Expense Service/total-expense.service';
 import { ExpenseService } from '../../Services/Expense Service/expense.service';
 
+
 @Component({
   selector: 'app-dashboard',
   imports: [RouterModule, RouterLink, NgChartsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
+
 export class DashboardComponent implements OnInit, OnDestroy {
   totalIncome: number = 0;
   totalIncomeSubscription: Subscription | undefined;
 
   totalExpense: number = 0;
   totalExpenseSubscription: Subscription | undefined;
+
 
   pieChartData: ChartData<'pie', number[]> = {
     labels: ['Rent', 'Groceries', 'Fun'],
@@ -113,6 +117,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
+
   updateBarChartData(): void {
     this.barChartData = {
       ...this.barChartData,
@@ -123,4 +128,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     };
     this.cdr.detectChanges();
   }
+
+
 }
