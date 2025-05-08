@@ -4,15 +4,15 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class TotalIncomeService {
-  private _totalIncome = new BehaviorSubject<number>(0);
-  totalIncome$ = this._totalIncome.asObservable();
+export class TotalExpenseService {
+  private _totalExpense = new BehaviorSubject<number>(0);
+  totalExpense$ = this._totalExpense.asObservable();
 
   setInitialTotal(total: number): void {
-    this._totalIncome.next(total);
+    this._totalExpense.next(total);
   }
 
   updateTotal(total: number): void {
-    this._totalIncome.next(total);
+    this._totalExpense.next(total);
   }
 }

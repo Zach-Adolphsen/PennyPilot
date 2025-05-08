@@ -14,7 +14,7 @@ import {
 import { Observable, from, switchMap, map, Subject } from 'rxjs';
 import { AuthService } from '../../auth-service.service';
 import { inject } from '@angular/core'; // Import inject
-import { orderBy, query, Timestamp } from 'firebase/firestore';
+import { orderBy, query, Timestamp } from 'firebase/firestore'; // Import Timestamp
 import { TotalIncomeService } from '../Total-Income Service/total-income.service';
 
 @Injectable({
@@ -56,10 +56,22 @@ export class IncomeService {
   }
 
   addIncome(income: Income): Observable<string> {
-    return this.getUserIncomeCollection().pipe(
-      switchMap((incomeCollection) => {
+    return this.authService.getUser().pipe(
+      switchMap((user) => {
+        if (!user) {
+          throw new Error('User not authenticated');
+        }
+        const userDoc = doc(this.firestore, 'users', user.uid);
+        const incomeCollection = collection(userDoc, 'IncomeList');
         const { id, ...incomeData } = income;
-        return from(addDoc(incomeCollection, incomeData)).pipe(
+        const incomeDataWithTimestamp = {
+          ...incomeData,
+          date:
+            income.date instanceof Timestamp
+              ? income.date
+              : Timestamp.fromDate(income.date as Date), // Convert Date to Timestamp
+        };
+        return from(addDoc(incomeCollection, incomeDataWithTimestamp)).pipe(
           switchMap((docRef) => {
             this.incomeSourceAdded.next(); // Notify that income was added
             return this.getTotalIncome().pipe(
@@ -73,41 +85,7 @@ export class IncomeService {
       })
     );
   }
-  // addIncome(income: Income): Observable<string> {
-  //   return this.getUserIncomeCollection().pipe(
-  //     switchMap((incomeCollection) => {
-  //       const { id, ...incomeData } = income;
-  //       return from(addDoc(incomeCollection, incomeData)).pipe(
-  //         map((docRef) => {
-  //           this.incomeSourceAdded.next();
-  //           this.totalIncomeService.updateTotal();
-  //           return docRef.id;
-  //         })
-  //       );
-  //     })
-  //   );
-  // }
 
-  // getIncomeList(): Observable<Income[]> {
-  //   return this.getUserIncomeCollection().pipe(
-  //     switchMap((incomeCollection) => {
-  //       const orderedCollection = query(incomeCollection, orderBy('date'));
-  //       return from(getDocs(orderedCollection)).pipe(
-  //         map((snapshot) => {
-  //           return snapshot.docs.map((doc) => {
-  //             const data = doc.data() as any;
-  //             const date: Timestamp = data.date;
-  //             const formattedDate = date
-  //               ? date.toDate().toLocaleDateString()
-  //               : '';
-
-  //             return { id: doc.id, ...data, date: formattedDate } as Income;
-  //           });
-  //         })
-  //       );
-  //     })
-  //   );
-  // }
   getIncomeList(): Observable<Income[]> {
     return this.getUserIncomeCollection().pipe(
       switchMap((incomeCollection) => {
@@ -116,19 +94,18 @@ export class IncomeService {
           map((snapshot) => {
             const incomes = snapshot.docs.map((doc) => {
               const data = doc.data() as any;
-              console.log(`data is ${data.date}`);
-              const date: Timestamp = data.date.seconds;
-              console.log('Date: ' + date);
-              const formattedDate = date ? date.toString() : '';
-              // ? date.toDate().toLocaleDateString()
-              // : '';
+              console.log(`Date is ${data.date}`);
+              const date: Timestamp = data.date as Timestamp; // Corrected line
+              const formattedDate = date
+                ? date.toDate().toLocaleDateString()
+                : '';
               console.log(`formatted data is ${formattedDate}`);
               const incomeObject = {
                 id: doc.id,
                 ...data,
-                // date: formattedDate,
+                date: formattedDate,
               } as Income;
-              console.log('Fetched Income Item:', incomeObject); // Add this line
+              console.log('Fetched Income Item:', incomeObject);
               return incomeObject;
             });
             return incomes;
@@ -138,20 +115,35 @@ export class IncomeService {
     );
   }
 
+  updateIncome(income: Income): Observable<void> {
+    return this.getUserIncomeCollection().pipe(
+      switchMap((incomeCollection) => {
+        const incomeDocument = doc(incomeCollection, income.id);
+        const updatedData: Partial<Income> = {};
+
+        if (income.source !== undefined) {
+          updatedData.source = income.source;
+        }
+        if (income.amount !== undefined) {
+          updatedData.amount = Number(income.amount); // Ensure it's a number
+        }
+        if (income.date !== undefined) {
+          updatedData.date =
+            income.date instanceof Timestamp
+              ? income.date
+              : Timestamp.fromDate(income.date as Date); // Ensure it's a Timestamp
+        }
+
+        return from(updateDoc(incomeDocument, updatedData));
+      })
+    );
+  }
+
   deleteIncome(incomeId: string): Observable<void> {
     return this.getUserIncomeCollection().pipe(
       switchMap((incomeCollection) => {
         const incomeDocument = doc(incomeCollection, incomeId);
         return from(deleteDoc(incomeDocument));
-      })
-    );
-  }
-
-  updateIncome(income: Income): Observable<void> {
-    return this.getUserIncomeCollection().pipe(
-      switchMap((incomeCollection) => {
-        const incomeDocument = doc(incomeCollection, income.id);
-        return from(updateDoc(incomeDocument, { ...income }));
       })
     );
   }
