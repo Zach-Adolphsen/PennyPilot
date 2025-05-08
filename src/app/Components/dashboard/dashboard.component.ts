@@ -1,95 +1,128 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 import { ChartData, ChartOptions } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
 import { TotalIncomeService } from '../../Services/Total-Income Service/total-income.service';
 import { IncomeService } from '../../Services/Income Service/income.service';
 import { Subscription } from 'rxjs';
+import { TotalExpenseService } from '../../Services/Total-Expense Service/total-expense.service';
+import { ExpenseService } from '../../Services/Expense Service/expense.service';
 
 @Component({
-  selector: 'app-dashboard',
-  imports: [RouterModule, RouterLink, NgChartsModule],
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css',
+  selector: 'app-dashboard',
+  imports: [RouterModule, RouterLink, NgChartsModule],
+  templateUrl: './dashboard.component.html',
+  styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  
-  totalIncome: number = 0;
-  totalIncomeSubscription: Subscription | undefined;
+  totalIncome: number = 0;
+  totalIncomeSubscription: Subscription | undefined;
 
-  pieChartData: ChartData<'pie', number[]> = {
-    labels: ['Rent', 'Groceries', 'Fun'],
-    datasets: [
-      {
-        data: [100, 300, 200],
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-      },
-    ],
-  };
+  totalExpense: number = 0;
+  totalExpenseSubscription: Subscription | undefined;
 
-  pieChartOptions: ChartOptions<'pie'> = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-    },
-  };
+  pieChartData: ChartData<'pie', number[]> = {
+    labels: ['Rent', 'Groceries', 'Fun'],
+    datasets: [
+      {
+        data: [100, 300, 200],
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+      },
+    ],
+  };
 
-  barChartData: ChartData<'bar'> = {
-    labels: ['Total Income'], // Modified label
-    datasets: [
-      {
-        label: 'Income',
-        data: [this.totalIncome], // Use the totalIncome here
-        backgroundColor: '#42A5F5',
-      },
-      {
-        label: 'Expenses',
-        data: [300], // Example expense data
-        backgroundColor: '#FFA726',
-      },
-    ],
-  };
+  pieChartOptions: ChartOptions<'pie'> = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+    },
+  };
 
-  barChartOptions: ChartOptions<'bar'> = {
-    responsive: true,
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-    },
-  };
+  barChartData: ChartData<'bar'> = {
+    labels: ['Income vs Expenses'], // More descriptive label
+    datasets: [
+      {
+        label: 'Income',
+        data: [this.totalIncome],
+        backgroundColor: '#42A5F5',
+      },
+      {
+        label: 'Expenses',
+        data: [this.totalExpense],
+        backgroundColor: '#FFA726',
+      },
+    ],
+  };
 
-  constructor(private totalIncomeService: TotalIncomeService, private incomeService: IncomeService) {}
+  barChartOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+    },
+  };
 
-  ngOnInit(): void {
-    this.totalIncomeSubscription = this.totalIncomeService.totalIncome$.subscribe(
-      (total) => {
-        this.totalIncome = total;
-        this.updateBarChartData(); // Update the bar chart when total income changes
-      }
-    );
+  constructor(
+    private totalIncomeService: TotalIncomeService,
+    private incomeService: IncomeService,
+    private totalExpenseService: TotalExpenseService,
+    private expenseService: ExpenseService,
+    private cdr: ChangeDetectorRef // Inject ChangeDetectorRef
+  ) {}
 
-    // Optionally, fetch the initial total income if needed on component load
-    this.incomeService.getTotalIncome().subscribe((initialTotal) => {
-      this.totalIncomeService.setInitialTotal(initialTotal);
-    });
+  ngOnInit(): void {
+    this.totalIncomeSubscription = this.totalIncomeService.totalIncome$.subscribe(
+      (total) => {
+        this.totalIncome = total;
+        this.updateBarChartData();
+      }
+    );
+
+    // Fetch initial total income
+    this.incomeService.getTotalIncome().subscribe((initialTotal) => {
+      this.totalIncomeService.setInitialTotal(initialTotal);
+    });
+
+    this.totalExpenseSubscription = this.totalExpenseService.totalExpense$.subscribe(
+  (total) => {
+    console.log('Total Expense Received:', total);
+    this.totalExpense = total;
+    this.updateBarChartData();
   }
+);
 
-  ngOnDestroy(): void {
-    if (this.totalIncomeSubscription) {
-      this.totalIncomeSubscription.unsubscribe();
-    }
-  }
+    // Fetch initial total expense
+    this.expenseService.getTotalExpense().subscribe((initialTotal) => {
+      this.totalExpenseService.setInitialTotal(initialTotal);
+    });
+  }
 
-  updateBarChartData(): void {
-    this.barChartData.datasets[0].data = [this.totalIncome];
-    // You might need to trigger a chart update if your charting library requires it
-  }
+  ngOnDestroy(): void {
+    if (this.totalIncomeSubscription) {
+      this.totalIncomeSubscription.unsubscribe();
+    }
+
+    if (this.totalExpenseSubscription) {
+      this.totalExpenseSubscription.unsubscribe();
+    }
+  }
+
+  updateBarChartData(): void {
+      this.barChartData = { // Create a completely new object
+        ...this.barChartData,
+        datasets: [
+          { ...this.barChartData.datasets[0], data: [this.totalIncome] },
+          { ...this.barChartData.datasets[1], data: [this.totalExpense] },
+        ],
+      };
+      this.cdr.detectChanges();
+    }
 }
