@@ -1,4 +1,3 @@
-
 import { Component, inject, OnInit } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
@@ -10,7 +9,6 @@ import { Income } from '../../income';
 import { CommonModule } from '@angular/common';
 import { MoneySavedComponent } from '../money-saved/money-saved.component';
 import { forkJoin } from 'rxjs';
-
 
 @Component({
   selector: 'app-dashboard',
@@ -24,7 +22,6 @@ import { forkJoin } from 'rxjs';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
-
 export class DashboardComponent implements OnInit {
   private IncomeService = inject(IncomeService);
   private ExpenseService = inject(ExpenseService);
@@ -36,12 +33,10 @@ export class DashboardComponent implements OnInit {
   recentIncomes: Income[] = [];
   recentExpenses: Expense[] = [];
 
-
   pieChartData: ChartData<'pie', number[]> = {
     labels: ['Rent', 'Groceries', 'Fun'],
     datasets: [
       {
-
         data: [450, 300, 200],
 
         backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
@@ -56,7 +51,6 @@ export class DashboardComponent implements OnInit {
         position: 'top',
       },
     },
-
   };
 
   barChartData: ChartData<'bar'> = {
@@ -75,14 +69,12 @@ export class DashboardComponent implements OnInit {
     ],
   };
 
-
   barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
     scales: {
       y: {
         beginAtZero: true,
       },
-
     },
     plugins: {
       legend: {
@@ -93,15 +85,16 @@ export class DashboardComponent implements OnInit {
   loadRecentData(): void {
     this.IncomeService.getRecentIncomes(3).subscribe((income) => {
       this.recentIncomes = income;
-      console.log('Incomes:', income); // ✅ Debug log
-      if (income.length === 0) console.warn('⚠️ No incomes returned');
+      console.log('Incomes:', income); // Debug log
+      if (income.length === 0) console.warn('No incomes returned');
     });
 
     this.ExpenseService.getRecentExpenses(3).subscribe((expenses) => {
       this.recentExpenses = expenses;
-      console.log('Expenses:', expenses); // ✅ Debug log
+      console.log('Expenses:', expenses); // Debug log
     });
   }
+
   ngOnInit(): void {
     this.currentDate = new Date().toLocaleDateString();
     this.IncomeService.getMonthlyIncome().subscribe((income) => {
@@ -121,7 +114,7 @@ export class DashboardComponent implements OnInit {
     // Use forkJoin to wait for both income and expense observables to emit
     forkJoin({
       income: this.IncomeService.getMonthlyIncome(),
-      expense: this.ExpenseService.getMonthlyExpense()
+      expense: this.ExpenseService.getMonthlyExpense(),
     }).subscribe(
       ({ income, expense }) => {
         // Calculate final funds after both values are retrieved
@@ -133,5 +126,4 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
-
 }

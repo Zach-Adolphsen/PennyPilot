@@ -1,4 +1,4 @@
-<div class="container" *ngIf="userData">
+<div class="container" *ngIf="userData$ | async as user">
   <!-- About me Section -->
   <div class="row my-4">
     <div class="card border-0">
@@ -12,7 +12,7 @@
         <div class="row text-center mb-3">
           <h6 class="col">Legal name</h6>
           <p class="col text-end" *ngIf="editingField !== 'legalName'">
-            {{ userData.fname }} {{ userData.lname }}
+            {{ user.fname }} {{ user.lname }}
           </p>
           <input
             *ngIf="editingField === 'legalName'"
@@ -42,7 +42,7 @@
         <div class="row text-center mb-3">
           <h6 class="col">Annual Income</h6>
           <p class="col text-end" *ngIf="editingField !== 'yearlyIncome'">
-            {{ userData.yearlyIncome | currency }}
+            {{ user.yearlyIncome | currency }}
           </p>
           <input
             *ngIf="editingField === 'yearlyIncome'"
@@ -115,7 +115,7 @@
         <div class="row text-center mb-3">
           <h6 class="col">Email Address</h6>
           <p class="col text-end" *ngIf="editingField !== 'email'">
-            {{ userData.email }}
+            {{ user.email }}
           </p>
           <input
             *ngIf="editingField === 'email'"
