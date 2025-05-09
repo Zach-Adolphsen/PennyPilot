@@ -38,12 +38,11 @@ export class DashboardComponent implements OnInit {
 
   @ViewChild('barChart') barChartRef: any;
 
-
   pieChartData: ChartData<'pie', number[]> = {
-    labels: ['Rent', 'Groceries', 'Fun'],
+    labels: ['Necesities', 'Wants', 'Savings'],
     datasets: [
       {
-        data: [450, 300, 200],
+        data: [50, 30, 20],
         backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
       },
     ],
@@ -104,6 +103,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.updateBarChartData();
     this.currentDate = new Date().toLocaleDateString();
     const today = new Date();
     this.currentMonthName = today.toLocaleString('default', { month: 'long' });
@@ -163,32 +163,24 @@ export class DashboardComponent implements OnInit {
     console.log('updateBarChartLabels - final barChartData:', this.barChartData);
   }
 
-  updateBarChartData(): void {
+  async updateBarChartData(): Promise<void> {
     console.log('updateBarChartData - currentMonthName:', this.currentMonthName);
     console.log('updateBarChartData - initial barChartData:', this.barChartData);
     if (this.barChartData && this.barChartData.labels && this.barChartData.datasets && this.barChartData.datasets.length >= 2) {
       const currentMonthIndex = this.barChartData.labels.indexOf(this.currentMonthName);
-      console.log('updateBarChartData - currentMonthIndex:', currentMonthIndex);
-      if (currentMonthIndex !== -1) {
-        if (this.barChartData.datasets[0] && this.barChartData.datasets[0].data) {
-          this.barChartData.datasets[0].data[currentMonthIndex] = this.monthlyIncome;
-          console.log('updateBarChartData - income data updated:', this.barChartData.datasets[0].data);
-        }
-        if (this.barChartData.datasets[1] && this.barChartData.datasets[1].data) {
-          this.barChartData.datasets[1].data[currentMonthIndex] = this.monthlyExpense;
-          console.log('updateBarChartData - expense data updated:', this.barChartData.datasets[1].data);
-        }
+      const incomeDataset = this.barChartData.datasets.find(dataset => dataset.label === 'Income');
+      const expenseDataset = this.barChartData.datasets.find(dataset => dataset.label === 'Expenses');
 
-        if (this.barChartRef?.chart) {
-      this.barChartRef.chart.update();
-      console.log('updateBarChartData - chart updated');
-      } else {
-      console.log('updateBarChartData - chart reference not yet available');
-      }
-        // Optionally trigger chart update here if needed
-      }
+    if (incomeDataset?.data && currentMonthIndex !== -1) {
+    incomeDataset.data[currentMonthIndex] = this.monthlyIncome;
+    console.log('updateBarChartData - income data updated:', incomeDataset.data);
     }
-    console.log('updateBarChartData - final barChartData:', this.barChartData);
+
+    if (expenseDataset?.data && currentMonthIndex !== -1) {
+    expenseDataset.data[currentMonthIndex] = this.monthlyExpense;
+    console.log('updateBarChartData - expense data updated:', expenseDataset.data);
+    }
+    }
   }
 
   calculateFinalFunds(): void {

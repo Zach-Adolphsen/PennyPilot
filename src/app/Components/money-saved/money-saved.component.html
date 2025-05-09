@@ -1,11 +1,31 @@
 <div class="card shadow-sm bg-light">
   <div class="card-body">
-    <h5 class="card-title d-flex justify-content-between align-items-center">
-      Monthly Financial Breakdown
-      <i class="bi bi-cash-coin fs-4 text-success"></i>
-    </h5>
-    <p class="mb-1">Total Saved This Month:</p>
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <h5 class="card-title">
+          Monthly Financial Breakdown
+          <i class="bi bi-cash-coin fs-4 text-success ms-2"></i>
+        </h5>
+      </div>
+
+      <div class="text-end ms-3">
+        <label for="savingsGoalInput" class="form-label small fw-bold">Set Savings Goal</label>
+        <div class="input-group input-group-sm">
+          <input
+            type="number"
+            class="form-control"
+            id="savingsGoalInput"
+            placeholder="Amount"
+            [(ngModel)]="savingsGoal"
+          />
+          <button class="btn btn-outline-success" (click)="setSavingsGoal()">Set</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="mb-1 mt-3">Total Saved This Month:</p>
     <h4 class="text-success">{{ moneyNeeds | currency }}</h4>
+
     <p class="mb-1">Spending Money:</p>
     <h4 class="text-success">{{ moneyWants | currency }}</h4>
 
@@ -14,12 +34,12 @@
       <div
         class="progress-bar bg-success"
         role="progressbar"
-        style="width: 60%"
-        aria-valuenow="60"
+        [style.width.%]="progressPercent"
+        [attr.aria-valuenow]="progressPercent"
         aria-valuemin="0"
         aria-valuemax="100"
       >
-        60% of goal
+        {{ progressPercent }}% of goal
       </div>
     </div>
   </div>

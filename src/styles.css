@@ -1,1 +1,28 @@
-/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
+
+body {
+  font-family: "Inter", sans-serif;
+}
+.card {
+  border-radius: 1rem;
+  background-color: #ffffff;
+}
+
+.card-title {
+  font-size: 1.1rem;
+}
+
+.btn-outline-primary,
+.btn-outline-danger {
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-danger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-title h3 {
+  font-weight: bold;
+}

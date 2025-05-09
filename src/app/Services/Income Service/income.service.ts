@@ -11,19 +11,19 @@ import {
   DocumentData,
   Firestore,
   collectionData,
-  limit, // Import from AngularFire
+  limit, 
 } from '@angular/fire/firestore';
 import { Observable, from, switchMap, map, Subject, combineLatest } from 'rxjs';
 import { AuthService } from '../../auth-service.service';
-import { inject } from '@angular/core'; // Import inject
-import { getDoc, orderBy, query, Timestamp } from 'firebase/firestore'; // Import Timestamp
+import { inject } from '@angular/core'; 
+import { getDoc, orderBy, query, Timestamp } from 'firebase/firestore'; 
 import { TotalIncomeService } from '../Total-Income Service/total-income.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IncomeService {
-  private firestore: Firestore = inject(Firestore); // Inject Firestore
+  private firestore: Firestore = inject(Firestore); 
   private totalIncomeService = inject(TotalIncomeService);
   private authService = inject(AuthService);
 
@@ -50,7 +50,7 @@ export class IncomeService {
     return this.getIncomeList().pipe(
       map((incomes) => {
         return incomes.reduce(
-          (total, income) => total + Number(income.amount || 0), // Explicitly convert to Number
+          (total, income) => total + Number(income.amount || 0), 
           0
         );
       })
@@ -71,14 +71,14 @@ export class IncomeService {
           date:
             income.date instanceof Timestamp
               ? income.date
-              : Timestamp.fromDate(income.date as Date), // Convert Date to Timestamp
+              : Timestamp.fromDate(income.date as Date), 
         };
         return from(addDoc(incomeCollection, incomeDataWithTimestamp)).pipe(
           switchMap((docRef) => {
-            this.incomeSourceAdded.next(); // Notify that income was added
+            this.incomeSourceAdded.next(); 
             return this.getTotalIncome().pipe(
               map((total) => {
-                this.totalIncomeService.updateTotal(total); // Update the total
+                this.totalIncomeService.updateTotal(total); 
                 return docRef.id;
               })
             );
@@ -127,13 +127,13 @@ export class IncomeService {
           updatedData.source = income.source;
         }
         if (income.amount !== undefined) {
-          updatedData.amount = Number(income.amount); // Ensure it's a number
+          updatedData.amount = Number(income.amount); 
         }
         if (income.date !== undefined) {
           updatedData.date =
             income.date instanceof Timestamp
               ? income.date
-              : Timestamp.fromDate(income.date as Date); // Ensure it's a Timestamp
+              : Timestamp.fromDate(income.date as Date); 
         }
 
         return from(updateDoc(incomeDocument, updatedData));
@@ -166,7 +166,6 @@ export class IncomeService {
         if (!user) throw new Error('User not authenticated');
         const userDocRef = doc(this.firestore, 'users', user.uid);
         return from(getDoc(userDocRef)).pipe(
-          // or getDoc(userDocRef)
           map((snapshot) => {
             const data = (snapshot as any).data();
             return data?.yearlyIncome ?? 0;
@@ -176,22 +175,20 @@ export class IncomeService {
     );
   }
 
-  // Updated method for monthly income
   getMonthlyIncome(): Observable<number> {
     return combineLatest([
       this.authService.getCompleteUser(),
       this.getIncomeList(),
     ]).pipe(
       map(([user, incomeList]) => {
-        // Check if incomeList is defined and is an array
         if (!Array.isArray(incomeList)) {
-          return 0; // Return 0 if incomeList is not available
+          return 0; 
         }
         const additional = incomeList.reduce(
           (sum: number, inc: Income) => sum + (inc.amount || 0),
           0
-        ); // Add additional income from the income list
-        return +additional.toFixed(2); // Return the total monthly income
+        ); 
+        return +additional.toFixed(2); 
       })
     );
   }

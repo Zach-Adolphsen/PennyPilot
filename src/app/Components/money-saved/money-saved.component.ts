@@ -2,11 +2,12 @@ import { Component, inject, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IncomeService } from '../../Services/Income Service/income.service';
 import { ExpenseService } from '../../Services/Expense Service/expense.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-money-saved',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './money-saved.component.html',
   styleUrl: './money-saved.component.css',
 })
@@ -20,7 +21,6 @@ export class MoneySavedComponent {
   moneySaved: number = 0;
   moneyNeeds: number = 0;
   moneyWants: number = 0;
-
 
   ngOnInit() {
     this.calculateSavings();
@@ -49,7 +49,18 @@ export class MoneySavedComponent {
     this.moneySaved = this.monthlyIncome - this.monthlyExpense;
     this.moneyNeeds = this.moneySaved * 0.2;
     this.moneyWants = this.moneySaved * 0.3;
+  }
 
+  
+  savingsGoal: number = 0;
+  get progressPercent(): number {
+    return this.savingsGoal > 0
+      ? Math.min(100, (this.moneyNeeds / this.savingsGoal) * 100)
+      : 0;
+  }
 
+  setSavingsGoal() {
+    // Save it to database or local state if needed
+    console.log('Savings goal set to:', this.savingsGoal);
   }
 }

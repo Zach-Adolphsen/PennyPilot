@@ -1,38 +1,28 @@
 <div class="container" *ngIf="userData$ | async as user">
-  <!-- About Me Section -->
   <div class="row my-4">
-    <div class="card border-0">
+    <div class="card border border-1 p-3">
       <div class="card-body">
         <div class="card-title">
           <h3>About Me</h3>
           <hr />
         </div>
 
-        <!-- Legal Name -->
         <div class="row text-center mb-3">
           <h6 class="col">Legal Name</h6>
           <p class="col text-end">{{ user.fname }} {{ user.lname }}</p>
-        </div>
-
-        <!-- Annual Income -->
-        <div class="row text-center mb-3">
-          <h6 class="col">Annual Income</h6>
-          <p class="col text-end">{{ user.yearlyIncome | currency }}</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Contact Info Section -->
   <div class="row my-4">
-    <div class="card border-0">
+    <div class="card border border-1 p-3">
       <div class="card-body">
         <div class="card-title">
           <h3>Contact Info</h3>
           <hr />
         </div>
 
-        <!-- Email Address -->
         <div class="row text-center mb-3">
           <h6 class="col">Email Address</h6>
           <p class="col text-end">{{ user.email }}</p>
@@ -41,7 +31,6 @@
     </div>
   </div>
 
-  <!-- Logout Button -->
   <div class="row my-4">
     <div class="col text-center">
       <button class="btn btn-outline-success" (click)="logout()">Logout</button>

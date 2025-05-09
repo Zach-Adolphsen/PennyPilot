@@ -6,7 +6,6 @@
     </div>
 
     <form [formGroup]="expenseForm" (ngSubmit)="onAddExpense()">
-      <!-- Date -->
       <h6>Date</h6>
       <div class="input-group mb-3">
         <input type="date" class="form-control" formControlName="date" />
@@ -21,7 +20,6 @@
         }
       </div>
 
-      <!-- Source -->
       <h6>Type</h6>
       <div class="input-group mb-3">
         <input
@@ -37,7 +35,6 @@
         }
       </div>
 
-      <!-- Amount -->
       <h6>Amount</h6>
       <div class="input-group mb-3">
         <div class="input-group-prepend">

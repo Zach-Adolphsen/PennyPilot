@@ -38,4 +38,7 @@ export class AccountPageComponent {
   logout() {
     this.authService.logout();
   }
+  darkMode = false;
+
+  
 }
