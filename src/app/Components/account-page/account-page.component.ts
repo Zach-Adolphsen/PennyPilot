@@ -23,71 +23,19 @@ export class AccountPageComponent {
   savingsGoal: number = 0;
 
   ngOnInit() {
+    // Subscribe here for side effects like calculating savingsGoal
+    // or if you need the data imperatively in your methods.
+    // The console.log here will still fire on every real-time update.
     this.userData$.subscribe((data) => {
       this.userData = data ?? undefined; // Update local copy for methods
       console.log(
         'Combined user data received (via real-time update):',
         this.userData
       );
-      if (this.userData) {
-        this.calculateSavingsGoal();
-      }
     });
   }
 
   logout() {
     this.authService.logout();
-  }
-
-  // Start editing a specific field
-  startEditing(field: string): void {
-    this.editingField = field;
-    this.updatedValue = this.userData
-      ? this.userData[field as keyof CombinedUser]
-      : '';
-  }
-
-  saveEdit(): void {
-    if (this.editingField && this.updatedValue !== '') {
-      console.log(`Saving ${this.editingField}:`, this.updatedValue);
-
-      if (this.editingField === 'yearlyIncome') {
-        const amount = parseFloat(this.updatedValue);
-        if (isNaN(amount)) {
-          console.error('Invalid amount entered.');
-          return;
-        }
-        this.updatedValue = amount;
-      }
-
-      this.firestoreService
-        .updateUserField(this.editingField, this.updatedValue)
-        .subscribe({
-          next: () => {
-            console.log(`${this.editingField} updated successfully!`);
-            this.editingField = null;
-            this.updatedValue = '';
-          },
-          error: (error: any) => {
-            console.error('Error updating field: ', error);
-          },
-        });
-    }
-  }
-
-  calculateSavingsGoal(): void {
-    if (
-      this.userData &&
-      typeof this.userData.yearlyIncome === 'number' &&
-      this.userData.yearlyIncome >= 0
-    ) {
-      this.savingsGoal = this.userData.yearlyIncome * 0.5;
-      console.log(`Savings goal calculated: $${this.savingsGoal}`);
-    } else {
-      console.error(
-        'Yearly income is not defined or invalid in userData for savings goal calculation!'
-      );
-      this.savingsGoal = 0;
-    }
   }
 }

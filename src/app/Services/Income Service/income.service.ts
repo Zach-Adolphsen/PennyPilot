@@ -195,7 +195,7 @@ export class IncomeService {
       })
     );
   }
-
+  
   getRecentIncomes(limitCount: number = 3): Observable<Income[]> {
     return this.getUserIncomeCollection().pipe(
       switchMap((incomeCollection) => {
