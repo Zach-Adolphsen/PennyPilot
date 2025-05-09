@@ -18,6 +18,7 @@ export class IncomePageComponent implements OnInit {
   yearlyIncome: number = 0;
   monthlyIncome: number = 0;
 
+  // subscribes to get income methods in income.service
   ngOnInit(): void {
     this.authService.getCompleteUser().subscribe((user) => {
       if (user) {
