@@ -75,19 +75,19 @@ export class IncomePageComponent implements OnInit {
     });
   }
 
-  getMonthlyIncome(): Observable<number> {
-    return combineLatest([
-      this.authService.getCompleteUser(),
-      this.incomeService.getIncomeList(),
-    ]).pipe(
-      map(([user, incomeList]) => {
-        const base = (user?.yearlyIncome ?? 0) / 12;
-        const additional = incomeList.reduce(
-          (sum, inc) => sum + (inc.amount || 0),
-          0
-        );
-        return +(base + additional).toFixed(2);
-      })
-    );
-  }
+  // getMonthlyIncome(): Observable<number> {
+  //   return combineLatest([
+  //     this.authService.getCompleteUser(),
+  //     this.incomeService.getIncomeList(),
+  //   ]).pipe(
+  //     map(([user, incomeList]) => {
+  //       const base = (user?.yearlyIncome ?? 0) / 12;
+  //       const additional = incomeList.reduce(
+  //         (sum, inc) => sum + (inc.amount || 0),
+  //         0
+  //       );
+  //       return +(base + additional).toFixed(2);
+  //     })
+  //   );
+  // }
 }

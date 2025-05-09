@@ -160,27 +160,27 @@ export class IncomeService {
     );
   }
 
-  getYearlyIncome(): Observable<number> {
-    return this.authService.getUser().pipe(
-      switchMap((user) => {
-        if (!user) throw new Error('User not authenticated');
-        const userDocRef = doc(this.firestore, 'users', user.uid);
-        return from(getDoc(userDocRef)).pipe(
-          // or getDoc(userDocRef)
-          map((snapshot) => {
-            const data = (snapshot as any).data();
-            return data?.yearlyIncome ?? 0;
-          })
-        );
-      })
-    );
-  }
+  // getYearlyIncome(): Observable<number> {
+  //   return this.authService.getUser().pipe(
+  //     switchMap((user) => {
+  //       if (!user) throw new Error('User not authenticated');
+  //       const userDocRef = doc(this.firestore, 'users', user.uid);
+  //       return from(getDoc(userDocRef)).pipe(
+  //         // or getDoc(userDocRef)
+  //         map((snapshot) => {
+  //           const data = (snapshot as any).data();
+  //           return data?.yearlyIncome ?? 0;
+  //         })
+  //       );
+  //     })
+  //   );
+  // }
 
-  getWeeklyIncome(): Observable<number> {
-    return this.getYearlyIncome().pipe(
-      map((yearly) => +(yearly / 52).toFixed(2)) // Round to 2 decimal places
-    );
-  }
+  // getWeeklyIncome(): Observable<number> {
+  //   return this.getYearlyIncome().pipe(
+  //     map((yearly) => +(yearly / 52).toFixed(2)) // Round to 2 decimal places
+  //   );
+  // }
 
   // Updated method for monthly income
   getMonthlyIncome(): Observable<number> {
@@ -203,6 +203,7 @@ export class IncomeService {
       })
     );
   }
+  
   getRecentIncomes(limitCount: number = 3): Observable<Income[]> {
     return this.getUserIncomeCollection().pipe(
       switchMap((incomeCollection) => {
