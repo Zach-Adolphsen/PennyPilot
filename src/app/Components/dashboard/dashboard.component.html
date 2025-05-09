@@ -1,8 +1,6 @@
 <div class="container-fluid p-4">
   <div class="row">
-    <!-- LEFT COLUMN -->
     <div class="col-md-6 d-flex flex-column gap-4">
-      <!-- Overview Card -->
       <div class="card shadow-sm rounded-4 p-3 bg-white">
         <div class="card-body">
           <h5 class="card-title fw-semibold">Overview as of: {{ currentDate }}</h5>
@@ -29,14 +27,12 @@
         </div>
       </div>
 
-      <!-- Money Saved Card -->
       <div class="card shadow-sm rounded-4 p-3 bg-white">
         <div class="card-body">
           <app-money-saved></app-money-saved>
         </div>
       </div>
 
-      <!-- Income Breakdown Card -->
       <div class="card shadow-sm rounded-4 p-3 bg-white mb-4">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
@@ -55,23 +51,19 @@
       </div>
     </div>
 
-    <!-- RIGHT COLUMN -->
     <div class="col-md-6 d-flex flex-column gap-4">
-      <!-- Pie Chart Card -->
       <div class="card shadow-sm rounded-4 bg-white" style="height: 300px">
         <div class="card-body d-flex justify-content-center align-items-center p-2 h-100">
           <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="'pie'"></canvas>
         </div>
       </div>
 
-      <!-- Bar Chart Card -->
       <div class="card shadow-sm rounded-4 bg-white" style="height: 300px">
         <div class="card-body d-flex justify-content-center align-items-center p-2 h-100">
           <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'"></canvas>
         </div>
       </div>
 
-      <!-- Expense Breakdown Card -->
       <div class="card shadow-sm rounded-4 p-3 bg-white">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">

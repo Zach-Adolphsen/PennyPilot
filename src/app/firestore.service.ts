@@ -4,8 +4,8 @@ import { Injectable } from '@angular/core';
 import { Firestore, doc, setDoc } from '@angular/fire/firestore';
 import { inject } from '@angular/core';
 import { AuthService } from './auth-service.service';
-import { Observable, from, throwError } from 'rxjs'; // Import from, throwError
-import { switchMap, take } from 'rxjs/operators'; // Import switchMap, take
+import { Observable, from, throwError } from 'rxjs'; 
+import { switchMap, take } from 'rxjs/operators'; 
 
 
 @Injectable({

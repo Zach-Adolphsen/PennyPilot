@@ -10,7 +10,6 @@ export class DataService {
 
   constructor() { }
 
-  // Set incomes and expenses data (e.g., called from Income and Expense components)
   setIncomes(incomes: any[]) {
     this.incomes.next(incomes);
   }
@@ -19,7 +18,6 @@ export class DataService {
     this.expenses.next(expenses);
   }
 
-  // Get the latest income and expense data
   getIncomes() {
     return this.incomes.asObservable();
   }
