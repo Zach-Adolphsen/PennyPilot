@@ -51,16 +51,14 @@ export class MoneySavedComponent {
     this.moneyWants = this.moneySaved * 0.3;
   }
 
-  
   savingsGoal: number = 0;
   get progressPercent(): number {
     return this.savingsGoal > 0
-      ? Math.min(100, (this.moneyNeeds / this.savingsGoal) * 100)
+      ? Math.min(100, Math.round((this.moneyNeeds / this.savingsGoal) * 100))
       : 0;
   }
 
   setSavingsGoal() {
-    // Save it to database or local state if needed
     console.log('Savings goal set to:', this.savingsGoal);
   }
 }
