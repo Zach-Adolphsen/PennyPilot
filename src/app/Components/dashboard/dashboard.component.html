@@ -98,12 +98,11 @@
           class="card-body d-flex justify-content-center align-items-center p-2"
           style="height: 100%"
         >
-          <canvas
-            baseChart
-            [data]="barChartData"
-            [options]="barChartOptions"
-            [type]="'bar'"
-          ></canvas>
+          <canvas baseChart #barChart
+        [data]="barChartData"
+        [options]="barChartOptions"
+        [type]="'bar'">
+        </canvas>
         </div>
       </div>
 
