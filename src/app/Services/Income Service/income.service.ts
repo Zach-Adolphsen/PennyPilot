@@ -176,12 +176,6 @@ export class IncomeService {
     );
   }
 
-  getWeeklyIncome(): Observable<number> {
-    return this.getYearlyIncome().pipe(
-      map((yearly) => +(yearly / 52).toFixed(2)) // Round to 2 decimal places
-    );
-  }
-
   // Updated method for monthly income
   getMonthlyIncome(): Observable<number> {
     return combineLatest([
@@ -193,16 +187,15 @@ export class IncomeService {
         if (!Array.isArray(incomeList)) {
           return 0; // Return 0 if incomeList is not available
         }
-
-        const base = (user?.yearlyIncome ?? 0) / 12; // Yearly income divided by 12 for monthly
         const additional = incomeList.reduce(
           (sum: number, inc: Income) => sum + (inc.amount || 0),
           0
         ); // Add additional income from the income list
-        return +(base + additional).toFixed(2); // Return the total monthly income
+        return +additional.toFixed(2); // Return the total monthly income
       })
     );
   }
+
   getRecentIncomes(limitCount: number = 3): Observable<Income[]> {
     return this.getUserIncomeCollection().pipe(
       switchMap((incomeCollection) => {
