@@ -27,7 +27,7 @@ import { TotalExpenseService } from '../Total-Expense/total-expense.service';
   providedIn: 'root',
 })
 export class ExpenseService {
-  private firestore: Firestore = inject(Firestore); // Inject Firestore
+  private firestore: Firestore = inject(Firestore); 
   private authService = inject(AuthService);
   private totalExpenseService = inject(TotalExpenseService);
 
@@ -75,14 +75,14 @@ export class ExpenseService {
           date:
             expense.date instanceof Timestamp
               ? expense.date
-              : Timestamp.fromDate(expense.date as Date), // Convert Date to Timestamp
+              : Timestamp.fromDate(expense.date as Date), 
         };
         return from(addDoc(expenseCollection, expenseDataWithTimestamp)).pipe(
           switchMap((docRef) => {
-            this.expenseSourceAdded.next(); // Notify that income was added
+            this.expenseSourceAdded.next(); 
             return this.getTotalExpense().pipe(
               map((total) => {
-                this.totalExpenseService.updateTotal(total); // Update the total
+                this.totalExpenseService.updateTotal(total); 
                 return docRef.id;
               })
             );
@@ -140,13 +140,13 @@ export class ExpenseService {
           updatedData.source = expense.source;
         }
         if (expense.amount !== undefined) {
-          updatedData.amount = Number(expense.amount); // Ensure it's a number
+          updatedData.amount = Number(expense.amount); 
         }
         if (expense.date !== undefined) {
           updatedData.date =
             expense.date instanceof Timestamp
               ? expense.date
-              : Timestamp.fromDate(expense.date as Date); // Ensure it's a Timestamp
+              : Timestamp.fromDate(expense.date as Date); 
         }
 
         return from(updateDoc(expenseDocument, updatedData));
@@ -184,13 +184,13 @@ export class ExpenseService {
         const recentExpensesQuery = query(
           expenseCollection,
           orderBy('date', 'desc'),
-          limit(limitCount) // Get the most recent expenses
+          limit(limitCount) 
         );
         return from(getDocs(recentExpensesQuery)).pipe(
           map((snapshot) => {
             const expenses = snapshot.docs.map((doc) => {
               const data = doc.data() as any;
-              const date: Timestamp = data.date as Timestamp; // Assuming the 'date' is a Timestamp
+              const date: Timestamp = data.date as Timestamp;
               const formattedDate = date
                 ? date.toDate().toLocaleDateString()
                 : '';
