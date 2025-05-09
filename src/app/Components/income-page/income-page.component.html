@@ -8,14 +8,18 @@
     <div class="col-lg-6 mb-4">
       <app-income-list></app-income-list>
     </div>
-  <!-- Income Totals Section -->
-  <div class="row my-4">
-    <div class="col-12">
-      <h3>Total Income</h3>
-      <div class="card">
-        <div class="card-body">
-          <p><strong>Yearly Total Income (Expected):</strong> {{ yearlyIncome | currency }}</p>
-          <p><strong>Monthly Total Income:</strong> {{ monthlyIncome | currency }}</p>
+    <!-- Income Totals Section -->
+    <div class="row my-4">
+      <div class="col-12">
+        <h3>Total Income</h3>
+        <div class="card">
+          <div class="card-body">
+            <!-- <p><strong>Yearly Total Income (Expected):</strong> {{ yearlyIncome | currency }}</p> -->
+            <p>
+              <strong>Yearly Total Income To Date:</strong>
+              {{ monthlyIncome | currency }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
