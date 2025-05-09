@@ -38,12 +38,11 @@ export class DashboardComponent implements OnInit {
 
   @ViewChild('barChart') barChartRef: any;
 
-
   pieChartData: ChartData<'pie', number[]> = {
-    labels: ['Rent', 'Groceries', 'Fun'],
+    labels: ['Necesities', 'Wants', 'Savings'],
     datasets: [
       {
-        data: [450, 300, 200],
+        data: [50, 30, 20],
         backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
       },
     ],

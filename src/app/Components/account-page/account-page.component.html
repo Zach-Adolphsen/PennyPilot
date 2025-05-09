@@ -1,7 +1,7 @@
 <div class="container" *ngIf="userData$ | async as user">
   <!-- About Me Section -->
   <div class="row my-4">
-    <div class="card border-0">
+    <div class="card border border-1 p-3">
       <div class="card-body">
         <div class="card-title">
           <h3>About Me</h3>
@@ -15,17 +15,17 @@
         </div>
 
         <!-- Annual Income -->
-        <div class="row text-center mb-3">
+        <!-- <div class="row text-center mb-3">
           <h6 class="col">Annual Income</h6>
           <p class="col text-end">{{ user.yearlyIncome | currency }}</p>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
 
   <!-- Contact Info Section -->
   <div class="row my-4">
-    <div class="card border-0">
+    <div class="card border border-1 p-3">
       <div class="card-body">
         <div class="card-title">
           <h3>Contact Info</h3>
@@ -36,6 +36,25 @@
         <div class="row text-center mb-3">
           <h6 class="col">Email Address</h6>
           <p class="col text-end">{{ user.email }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Picture Section -->
+  <div class="row justify-content-end mb-4">
+    <div class="col-auto">
+      <div class="card border border-1 p-3">
+        <div class="card-body text-center">
+          <img
+            [src]="
+              'https://www.ndsu.edu/fileadmin/_processed_/5/d/csm_Kotala_Pratap_d69a13ee87.jpg'
+            "
+            alt="Profile Picture"
+            class="rounded-circle shadow"
+            style="width: 60px; height: 60px; object-fit: cover"
+          />
+          <p class="mt-2 mb-0">kotala</p>
         </div>
       </div>
     </div>
