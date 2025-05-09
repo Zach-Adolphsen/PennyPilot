@@ -29,7 +29,7 @@ export class ExpenseListComponent implements OnInit {
     );
     this.expenseList$ = this.expenseService.getExpenseList(); // Initial load
     this.expenseList$.subscribe((data) =>
-      console.log('Income List Data (initial):', data)
+      console.log('Expense List Data (initial):', data)
     );
   }
 

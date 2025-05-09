@@ -1,34 +1,55 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { IncomeService } from '../../Services/Income Service/income.service';
-import { CurrencyPipe } from '@angular/common';
+import { ExpenseService } from '../../Services/Expense Service/expense.service';
 
 @Component({
   selector: 'app-money-saved',
-  imports: [CurrencyPipe],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './money-saved.component.html',
   styleUrl: './money-saved.component.css',
 })
 export class MoneySavedComponent {
-  private IncomeService = inject(IncomeService);
-  monthlyIncome: number = 0; // This will store the weekly income value
-  halfMonthlyIncome: number = 0; // This will store half of the weekly income
-  // calculateHalfMonthlyIncome(): void {
-  //   this.IncomeService.getMonthlyIncome().subscribe(
-  //     (income) => {
-  //       // Set monthly income to the value received from the service
-  //       this.monthlyIncome = income;
-  //       // Now calculate half of the monthly income
-  //       this.halfMonthlyIncome = this.monthlyIncome / 2;
-  //       console.log(`Half of Monthly Income: $${this.halfMonthlyIncome}`);
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching monthly income:', error);
-  //     }
-  //   );
-  // }
+  private incomeService = inject(IncomeService);
+  private expenseService = inject(ExpenseService);
+
+  monthlyIncome: number = 0;
+  halfMonthlyIncome: number = 0;
+  monthlyExpense: number = 0;
+  moneySaved: number = 0;
+  moneyNeeds: number = 0;
+  moneyWants: number = 0;
+
+
+  ngOnInit() {
+    this.calculateSavings();
+  }
+
   calculateSavings() {
-    this.IncomeService.getMonthlyIncome().subscribe(
-      (income) => this.monthlyIncome
+    this.incomeService.getMonthlyIncome().subscribe(
+      (income) => {
+        this.monthlyIncome = income;
+        this.halfMonthlyIncome = income / 2;
+        this.updateSavings();
+      },
+      (error) => console.error('Error fetching income:', error)
     );
+
+    this.expenseService.getMonthlyExpense().subscribe(
+      (expense) => {
+        this.monthlyExpense = expense;
+        this.updateSavings();
+      },
+      (error) => console.error('Error fetching expenses:', error)
+    );
+  }
+
+  updateSavings() {
+    this.moneySaved = this.monthlyIncome - this.monthlyExpense;
+    this.moneyNeeds = this.moneySaved * 0.2;
+    this.moneyWants = this.moneySaved * 0.3;
+
+
   }
 }

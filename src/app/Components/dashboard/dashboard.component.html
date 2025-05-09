@@ -10,27 +10,20 @@
             <div class="col">
               <h6>Recent Income</h6>
               <ul class="list-unstyled">
-
                 <li *ngFor="let income of recentIncomes">
-                  • {{ income.source ?? "Unknown Source" }} - ${{
-                    income.amount?.toFixed(2) ?? "0.00"
-                  }}
+                  • {{ income.source ?? "Unknown Source" }} -
+                  <b> ${{ income.amount?.toFixed(2) ?? "0.00" }}</b>
                 </li>
               </ul>
-
             </div>
             <div class="col">
               <h6>Recent Expenses</h6>
               <ul class="list-unstyled">
-
                 <li *ngFor="let expense of recentExpenses">
-                  • {{ expense.source ?? "Unknown Source" }} - ${{
-                    expense.amount?.toFixed(2) ?? "0.00"
-                  }}
+                  • {{ expense.source ?? "Unknown Source" }} -
+                  <b> ${{ expense.amount?.toFixed(2) ?? "0.00" }} </b>
                 </li>
-
               </ul>
-              
             </div>
           </div>
           <h5 class="card-title">
@@ -38,8 +31,6 @@
           </h5>
         </div>
       </div>
-
-
 
       <!-- Money Saved Card -->
       <div class="card shadow-sm">

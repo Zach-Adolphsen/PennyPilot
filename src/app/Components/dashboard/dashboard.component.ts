@@ -1,3 +1,4 @@
+
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
@@ -36,6 +37,7 @@ export class DashboardComponent implements OnInit {
   recentExpenses: Expense[] = [];
 
   @ViewChild('barChart') barChartRef: any;
+
 
   pieChartData: ChartData<'pie', number[]> = {
     labels: ['Rent', 'Groceries', 'Fun'],
@@ -89,13 +91,15 @@ export class DashboardComponent implements OnInit {
   loadRecentData(): void {
     this.IncomeService.getRecentIncomes(3).subscribe((income) => {
       this.recentIncomes = income;
-      console.log('Incomes:', income);
-      if (income.length === 0) console.warn('⚠️ No incomes returned');
+
+
+      console.log('Incomes:', income); // Debug log
+      if (income.length === 0) console.warn('No incomes returned');
     });
 
     this.ExpenseService.getRecentExpenses(3).subscribe((expenses) => {
       this.recentExpenses = expenses;
-      console.log('Expenses:', expenses);
+      console.log('Expenses:', expenses); // Debug log
     });
   }
 
