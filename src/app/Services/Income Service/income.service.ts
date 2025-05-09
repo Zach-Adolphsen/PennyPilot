@@ -160,27 +160,21 @@ export class IncomeService {
     );
   }
 
-  // getYearlyIncome(): Observable<number> {
-  //   return this.authService.getUser().pipe(
-  //     switchMap((user) => {
-  //       if (!user) throw new Error('User not authenticated');
-  //       const userDocRef = doc(this.firestore, 'users', user.uid);
-  //       return from(getDoc(userDocRef)).pipe(
-  //         // or getDoc(userDocRef)
-  //         map((snapshot) => {
-  //           const data = (snapshot as any).data();
-  //           return data?.yearlyIncome ?? 0;
-  //         })
-  //       );
-  //     })
-  //   );
-  // }
-
-  // getWeeklyIncome(): Observable<number> {
-  //   return this.getYearlyIncome().pipe(
-  //     map((yearly) => +(yearly / 52).toFixed(2)) // Round to 2 decimal places
-  //   );
-  // }
+  getYearlyIncome(): Observable<number> {
+    return this.authService.getUser().pipe(
+      switchMap((user) => {
+        if (!user) throw new Error('User not authenticated');
+        const userDocRef = doc(this.firestore, 'users', user.uid);
+        return from(getDoc(userDocRef)).pipe(
+          // or getDoc(userDocRef)
+          map((snapshot) => {
+            const data = (snapshot as any).data();
+            return data?.yearlyIncome ?? 0;
+          })
+        );
+      })
+    );
+  }
 
   // Updated method for monthly income
   getMonthlyIncome(): Observable<number> {
@@ -193,13 +187,11 @@ export class IncomeService {
         if (!Array.isArray(incomeList)) {
           return 0; // Return 0 if incomeList is not available
         }
-
-        const base = (user?.yearlyIncome ?? 0) / 12; // Yearly income divided by 12 for monthly
         const additional = incomeList.reduce(
           (sum: number, inc: Income) => sum + (inc.amount || 0),
           0
         ); // Add additional income from the income list
-        return +(base + additional).toFixed(2); // Return the total monthly income
+        return +additional.toFixed(2); // Return the total monthly income
       })
     );
   }
