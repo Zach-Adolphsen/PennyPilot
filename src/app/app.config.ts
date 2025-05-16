@@ -5,7 +5,7 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 
 import { routes } from './app.routes';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { Environment } from './environment';
+import { Environment } from './environment'; //firebaseConfig is stored here
 
 export const appConfig: ApplicationConfig = {
   providers: [
