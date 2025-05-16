@@ -5,22 +5,13 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 
 import { routes } from './app.routes';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-
-export const firebaseConfig = {
-  apiKey: 'AIzaSyDJtLkCGW7G9pjQ6Db87MeiC0vTGBfZtmo',
-  authDomain: 'pennypilot-70751.firebaseapp.com',
-  projectId: 'pennypilot-70751',
-  storageBucket: 'pennypilot-70751.firebasestorage.app',
-  messagingSenderId: '442614312413',
-  appId: '1:442614312413:web:2075d3992e599337b01a34',
-  measurementId: 'G-6G66SF10MS',
-};
+import { Environment } from './environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withComponentInputBinding()),
-    provideFirebaseApp(() => initializeApp(firebaseConfig)),
+    provideFirebaseApp(() => initializeApp(Environment.firebaseConfig)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
   ],
