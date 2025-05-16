@@ -9,7 +9,9 @@
       </div>
 
       <div class="text-end ms-3">
-        <label for="savingsGoalInput" class="form-label small fw-bold">Set Savings Goal</label>
+        <label for="savingsGoalInput" class="form-label small fw-bold"
+          >Set Savings Goal: (New Car, Down Payment, etc.)</label
+        >
         <div class="input-group input-group-sm">
           <input
             type="number"
@@ -18,7 +20,9 @@
             placeholder="Amount"
             [(ngModel)]="savingsGoal"
           />
-          <button class="btn btn-outline-success" (click)="setSavingsGoal()">Set</button>
+          <button class="btn btn-outline-success" (click)="setSavingsGoal()">
+            Set
+          </button>
         </div>
       </div>
     </div>
