@@ -7,8 +7,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Expense } from '../../expense';
-import { AuthService } from '../../auth-service.service';
+import { Expense } from '../../Interfaces/expense';
+import { AuthService } from '../../Services/Auth Service/auth-service.service';
 import { ExpenseService } from '../../Services/Expense Service/expense.service';
 import { Timestamp } from 'firebase/firestore';
 

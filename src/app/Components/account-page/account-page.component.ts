@@ -1,5 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { AuthService, CombinedUser } from '../../auth-service.service';
+import {
+  AuthService,
+  CombinedUser,
+} from '../../Services/Auth Service/auth-service.service';
 import { FirestoreService } from '../../firestore.service'; // Make sure this exists
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -39,6 +42,4 @@ export class AccountPageComponent {
     this.authService.logout();
   }
   darkMode = false;
-
-  
 }

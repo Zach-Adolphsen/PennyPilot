@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { ExpenseService } from '../../Services/Expense Service/expense.service';
-import { Expense } from '../../expense';
+import { Expense } from '../../Interfaces/expense';
 import { Timestamp } from 'firebase/firestore';
 
 @Component({

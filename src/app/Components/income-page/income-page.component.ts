@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { AuthService } from '../../auth-service.service';
+import { AuthService } from '../../Services/Auth Service/auth-service.service';
 import { AddIncomeComponent } from '../add-income/add-income.component';
 import { IncomeListComponent } from '../income-list/income-list.component';
 import { IncomeService } from '../../Services/Income Service/income.service';

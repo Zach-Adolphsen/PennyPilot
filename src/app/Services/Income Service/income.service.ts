@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Income } from '../../income';
+import { Income } from '../../Interfaces/income';
 import {
   collection,
   doc,
@@ -11,19 +11,19 @@ import {
   DocumentData,
   Firestore,
   collectionData,
-  limit, 
+  limit,
 } from '@angular/fire/firestore';
 import { Observable, from, switchMap, map, Subject, combineLatest } from 'rxjs';
-import { AuthService } from '../../auth-service.service';
-import { inject } from '@angular/core'; 
-import { getDoc, orderBy, query, Timestamp } from 'firebase/firestore'; 
+import { AuthService } from '../Auth Service/auth-service.service';
+import { inject } from '@angular/core';
+import { getDoc, orderBy, query, Timestamp } from 'firebase/firestore';
 import { TotalIncomeService } from '../Total-Income Service/total-income.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IncomeService {
-  private firestore: Firestore = inject(Firestore); 
+  private firestore: Firestore = inject(Firestore);
   private totalIncomeService = inject(TotalIncomeService);
   private authService = inject(AuthService);
 
@@ -50,7 +50,7 @@ export class IncomeService {
     return this.getIncomeList().pipe(
       map((incomes) => {
         return incomes.reduce(
-          (total, income) => total + Number(income.amount || 0), 
+          (total, income) => total + Number(income.amount || 0),
           0
         );
       })
@@ -71,14 +71,14 @@ export class IncomeService {
           date:
             income.date instanceof Timestamp
               ? income.date
-              : Timestamp.fromDate(income.date as Date), 
+              : Timestamp.fromDate(income.date as Date),
         };
         return from(addDoc(incomeCollection, incomeDataWithTimestamp)).pipe(
           switchMap((docRef) => {
-            this.incomeSourceAdded.next(); 
+            this.incomeSourceAdded.next();
             return this.getTotalIncome().pipe(
               map((total) => {
-                this.totalIncomeService.updateTotal(total); 
+                this.totalIncomeService.updateTotal(total);
                 return docRef.id;
               })
             );
@@ -127,13 +127,13 @@ export class IncomeService {
           updatedData.source = income.source;
         }
         if (income.amount !== undefined) {
-          updatedData.amount = Number(income.amount); 
+          updatedData.amount = Number(income.amount);
         }
         if (income.date !== undefined) {
           updatedData.date =
             income.date instanceof Timestamp
               ? income.date
-              : Timestamp.fromDate(income.date as Date); 
+              : Timestamp.fromDate(income.date as Date);
         }
 
         return from(updateDoc(incomeDocument, updatedData));
@@ -182,17 +182,17 @@ export class IncomeService {
     ]).pipe(
       map(([user, incomeList]) => {
         if (!Array.isArray(incomeList)) {
-          return 0; 
+          return 0;
         }
         const additional = incomeList.reduce(
           (sum: number, inc: Income) => sum + (inc.amount || 0),
           0
-        ); 
-        return +additional.toFixed(2); 
+        );
+        return +additional.toFixed(2);
       })
     );
   }
-  
+
   getRecentIncomes(limitCount: number = 3): Observable<Income[]> {
     return this.getUserIncomeCollection().pipe(
       switchMap((incomeCollection) => {

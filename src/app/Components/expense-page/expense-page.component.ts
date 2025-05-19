@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ExpenseService } from '../../Services/Expense Service/expense.service';
-import { AuthService } from '../../auth-service.service';
+import { AuthService } from '../../Services/Auth Service/auth-service.service';
 import { AddExpenseComponent } from '../add-expense/add-expense.component';
 import { ExpenseListComponent } from '../expense-list/expense-list.component';
 import { CurrencyPipe } from '@angular/common';

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { IncomeService } from '../../Services/Income Service/income.service';
-import { Income } from '../../income';
+import { Income } from '../../Interfaces/income';
 import { FormsModule } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { AsyncPipe } from '@angular/common';

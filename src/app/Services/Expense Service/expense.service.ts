@@ -8,7 +8,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable, from, switchMap, map, Subject, combineLatest } from 'rxjs';
 
-import { AuthService } from '../../auth-service.service';
+import { AuthService } from '../Auth Service/auth-service.service';
 import {
   addDoc,
   collection,
@@ -20,14 +20,14 @@ import {
   Timestamp,
   updateDoc,
 } from 'firebase/firestore';
-import { Expense } from '../../expense';
+import { Expense } from '../../Interfaces/expense';
 import { TotalExpenseService } from '../Total-Expense/total-expense.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExpenseService {
-  private firestore: Firestore = inject(Firestore); 
+  private firestore: Firestore = inject(Firestore);
   private authService = inject(AuthService);
   private totalExpenseService = inject(TotalExpenseService);
 
@@ -75,14 +75,14 @@ export class ExpenseService {
           date:
             expense.date instanceof Timestamp
               ? expense.date
-              : Timestamp.fromDate(expense.date as Date), 
+              : Timestamp.fromDate(expense.date as Date),
         };
         return from(addDoc(expenseCollection, expenseDataWithTimestamp)).pipe(
           switchMap((docRef) => {
-            this.expenseSourceAdded.next(); 
+            this.expenseSourceAdded.next();
             return this.getTotalExpense().pipe(
               map((total) => {
-                this.totalExpenseService.updateTotal(total); 
+                this.totalExpenseService.updateTotal(total);
                 return docRef.id;
               })
             );
@@ -140,13 +140,13 @@ export class ExpenseService {
           updatedData.source = expense.source;
         }
         if (expense.amount !== undefined) {
-          updatedData.amount = Number(expense.amount); 
+          updatedData.amount = Number(expense.amount);
         }
         if (expense.date !== undefined) {
           updatedData.date =
             expense.date instanceof Timestamp
               ? expense.date
-              : Timestamp.fromDate(expense.date as Date); 
+              : Timestamp.fromDate(expense.date as Date);
         }
 
         return from(updateDoc(expenseDocument, updatedData));
@@ -184,7 +184,7 @@ export class ExpenseService {
         const recentExpensesQuery = query(
           expenseCollection,
           orderBy('date', 'desc'),
-          limit(limitCount) 
+          limit(limitCount)
         );
         return from(getDocs(recentExpensesQuery)).pipe(
           map((snapshot) => {

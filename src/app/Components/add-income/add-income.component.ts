@@ -8,8 +8,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Income } from '../../income';
-import { AuthService } from '../../auth-service.service';
+import { Income } from '../../Interfaces/income';
+import { AuthService } from '../../Services/Auth Service/auth-service.service';
 import { Observable, Subscription } from 'rxjs';
 import { TotalIncomeService } from '../../Services/Total-Income Service/total-income.service';
 import { Timestamp } from 'firebase/firestore'; // Import Timestamp
