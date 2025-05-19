@@ -3,10 +3,10 @@ import {
   AuthService,
   CombinedUser,
 } from '../../Services/Auth Service/auth-service.service';
-import { FirestoreService } from '../../firestore.service'; // Make sure this exists
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { FirestoreService } from '../../Services/Firestore Service/firestore.service';
 
 @Component({
   selector: 'app-account-page',

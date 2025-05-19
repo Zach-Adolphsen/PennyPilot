@@ -2,9 +2,9 @@ import { User } from 'firebase/auth';
 import { Injectable } from '@angular/core';
 import { Firestore, doc, setDoc } from '@angular/fire/firestore';
 import { inject } from '@angular/core';
-import { AuthService } from './Services/Auth Service/auth-service.service';
 import { Observable, from, throwError } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
+import { AuthService } from '../Auth Service/auth-service.service';
 
 @Injectable({
   providedIn: 'root',
