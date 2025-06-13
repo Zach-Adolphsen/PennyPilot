@@ -1,62 +1,52 @@
-<div class="container-fluid">
-  <div class="row mt-5">
-    <div class="col"></div>
-    <div class="col-4">
-      <div class="card shadow">
-        <div class="card-body">
-          <form>
-            <div class="mb-3">
-              <h4 class="text-dark text-muted">Register</h4>
-            </div>
-            <div class="mb-3">
-              <label for="firstname" class="form-label me-2">First Name</label>
-              <input
-                type="text"
-                class="form-control"
-                name="fname"
-                [(ngModel)]="user.fname"
-              />
-              <label for="firstname" class="form-label">Last Name</label>
-              <input
-                type="text"
-                class="form-control"
-                name="lname"
-                [(ngModel)]="user.lname"
-              />
-            </div>
-            <div class="mb-3">
-              <label for="exampleInputEmail1" class="form-label">Email</label>
-              <input
-                type="email"
-                class="form-control"
-                name="email"
-                [(ngModel)]="user.email"
-              />
-            </div>
-            <div class="mb-3">
-              <label for="exampleInputPassword1" class="form-label"
-                >Password</label
-              >
-              <input
-                type="password"
-                class="form-control"
-                name="password"
-                [(ngModel)]="user.password"
-              />
-            </div>
-            <label for="yearlyIncome">Yearly Income</label>
-
-            <div class="row">
-              <div class="col-md-6">
-                <a href="/login" style="text-decoration: none"
-                  >Have an Account? <span class="text-danger">Login</span>
-                </a>
-              </div>
-            </div>
-          </form>
+<div class="col-md-5">
+  <div class="card shadow">
+    <div class="card-body">
+      <form [formGroup]="userAccountRegister" (ngSubmit)="register()">
+        <div class="mb-3">
+          <h4 class="text-dark text-muted">Register</h4>
         </div>
-      </div>
+        <!-- First Name -->
+        <label class="form-label">First Name</label>
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" formControlName="fName" />
+        </div>
+
+        <!-- Last Name -->
+        <label class="form-label">Last Name</label>
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" formControlName="lName" />
+        </div>
+
+        <!-- Email -->
+        <label class="form-label">Email</label>
+        <div class="input-group mb-3">
+          <input type="email" class="form-control" formControlName="email" />
+        </div>
+
+        <!-- Password -->
+        <label class="form-label">Password</label>
+        <div class="input-group mb-3">
+          <input
+            type="password"
+            class="form-control"
+            formControlName="password"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="!userAccountRegister.valid"
+        >
+          Register
+        </button>
+
+        <div class="row">
+          <a href="/login" style="text-decoration: none"
+            >Have an Account? <span class="text-danger">Login</span>
+          </a>
+        </div>
+      </form>
     </div>
-    <div class="col"></div>
   </div>
 </div>

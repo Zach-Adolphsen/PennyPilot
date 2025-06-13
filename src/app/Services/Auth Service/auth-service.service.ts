@@ -18,11 +18,11 @@ import { Firestore, doc, docData, setDoc } from '@angular/fire/firestore';
 import { map, Observable, of, switchMap } from 'rxjs';
 
 export interface UserInfo {
-  fname: string;
-  lname: string;
+  fName: string;
+  lName: string;
   email: string;
   password: string;
-  [key: string]: any; 
+  [key: string]: any;
 }
 
 export interface CombinedUser {
@@ -32,7 +32,7 @@ export interface CombinedUser {
   fname?: string;
   lname?: string;
   createdAt?: Date;
-  [key: string]: any; 
+  [key: string]: any;
 }
 
 @Injectable({
@@ -57,24 +57,23 @@ export class AuthService {
     );
   }
 
-  async register(aUser: UserInfo) {
+  async register(newUser: UserInfo) {
     try {
       const res = await createUserWithEmailAndPassword(
         this.auth,
-        aUser.email,
-        aUser.password
+        newUser.email,
+        newUser.password
       );
       const user: User = res.user;
-      const displayName = `${aUser.fname} ${aUser.lname}`;
+      const displayName = `${newUser.fName} ${newUser.lName}`;
 
       await updateProfile(user, { displayName });
 
       // Create user profile
       await setDoc(doc(this.firestore, 'users', user.uid), {
-        uid: user.uid,
-        fname: aUser.fname,
-        lname: aUser.lname,
-        email: aUser.email,
+        fname: newUser.fName,
+        lname: newUser.lName,
+        email: newUser.email,
         createdAt: new Date(),
       });
 
