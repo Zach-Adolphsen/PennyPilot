@@ -3,24 +3,30 @@
     <div class="col-md-6 d-flex flex-column gap-4">
       <div class="card shadow-sm rounded-4 p-3 bg-white">
         <div class="card-body">
-          <h5 class="card-title fw-semibold">Overview as of: {{ currentDate }}</h5>
+          <h5 class="card-title fw-semibold">
+            Overview as of: {{ currentDate }}
+          </h5>
           <div class="row">
             <div class="col">
               <h6 class="text-muted fw-semibold">Recent Income</h6>
               <ul class="list-unstyled mb-0">
-                <li *ngFor="let income of recentIncomes">
-                  • {{ income.source ?? "Unknown Source" }} - 
-                  <strong>${{ income.amount?.toFixed(2) ?? "0.00" }}</strong>
+                @for(income of recentIncomes; track $index) {
+                <li>
+                  {{ income.source }} -
+                  <strong>${{ income.amount?.toFixed(2) }}</strong>
                 </li>
+                }
               </ul>
             </div>
             <div class="col">
               <h6 class="text-muted fw-semibold">Recent Expenses</h6>
               <ul class="list-unstyled mb-0">
-                <li *ngFor="let expense of recentExpenses">
-                  • {{ expense.source ?? "Unknown Source" }} - 
-                  <strong>${{ expense.amount?.toFixed(2) ?? "0.00" }}</strong>
+                @for(expense of recentExpenses; track $index) {
+                <li>
+                  {{ expense.source }} -
+                  <strong> ${{ expense.amount?.toFixed(2) }} </strong>
                 </li>
+                }
               </ul>
             </div>
           </div>
@@ -36,12 +42,17 @@
       <div class="card shadow-sm rounded-4 p-3 bg-white mb-4">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
-            <h5 class="card-title text-primary fw-semibold mb-0">Income Breakdown</h5>
-            <button routerLink="/income" class="btn btn-sm btn-outline-primary">+</button>
+            <h5 class="card-title text-primary fw-semibold mb-0">
+              Income Breakdown
+            </h5>
+            <button routerLink="/income" class="btn btn-sm btn-outline-primary">
+              +
+            </button>
           </div>
           <div class="mt-3">
             <p class="mb-1">
-              <strong>Total Income for the month of May:</strong> {{ monthlyIncome | currency }}
+              <strong>Total Income for the month of May:</strong>
+              {{ monthlyIncome | currency }}
             </p>
             <p class="mb-0">
               <strong>Savings Plan:</strong> 50% Needs / 30% Wants / 20% Savings
@@ -53,22 +64,40 @@
 
     <div class="col-md-6 d-flex flex-column gap-4">
       <div class="card shadow-sm rounded-4 bg-white" style="height: 300px">
-        <div class="card-body d-flex justify-content-center align-items-center p-2 h-100">
-          <canvas baseChart [data]="pieChartData" [options]="pieChartOptions" [type]="'pie'"></canvas>
+        <div
+          class="card-body d-flex justify-content-center align-items-center p-2 h-100"
+        >
+          <canvas
+            baseChart
+            [data]="pieChartData"
+            [options]="pieChartOptions"
+            [type]="'pie'"
+          ></canvas>
         </div>
       </div>
 
       <div class="card shadow-sm rounded-4 bg-white" style="height: 300px">
-        <div class="card-body d-flex justify-content-center align-items-center p-2 h-100">
-          <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'"></canvas>
+        <div
+          class="card-body d-flex justify-content-center align-items-center p-2 h-100"
+        >
+          <canvas
+            baseChart
+            [data]="barChartData"
+            [options]="barChartOptions"
+            [type]="'bar'"
+          ></canvas>
         </div>
       </div>
 
       <div class="card shadow-sm rounded-4 p-3 bg-white">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
-            <h5 class="card-title text-danger fw-semibold mb-0">Expense Breakdown</h5>
-            <button routerLink="/expense" class="btn btn-sm btn-outline-danger">+</button>
+            <h5 class="card-title text-danger fw-semibold mb-0">
+              Expense Breakdown
+            </h5>
+            <button routerLink="/expense" class="btn btn-sm btn-outline-danger">
+              +
+            </button>
           </div>
           <div class="mt-3">
             <p class="mb-0 text-secondary">
