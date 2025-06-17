@@ -68,7 +68,7 @@ export class IncomeListComponent implements OnInit {
       ) {
         // Added check for this.editingIncome.date
         try {
-          const [month, day, year] = this.editingIncome.date
+          const [month, day, year] = (this.editingIncome.date as string)
             .split('/')
             .map(Number);
           this.editingIncome.date = Timestamp.fromDate(

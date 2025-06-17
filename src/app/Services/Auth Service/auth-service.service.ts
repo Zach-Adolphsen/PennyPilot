@@ -16,6 +16,7 @@ import {
 import { Router } from '@angular/router';
 import { Firestore, doc, docData, setDoc } from '@angular/fire/firestore';
 import { map, Observable, of, switchMap } from 'rxjs';
+import { collection } from 'firebase/firestore';
 
 export interface UserInfo {
   fName: string;

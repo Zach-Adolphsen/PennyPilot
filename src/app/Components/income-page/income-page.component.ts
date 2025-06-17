@@ -22,7 +22,7 @@ export class IncomePageComponent implements OnInit {
   ngOnInit(): void {
     this.authService.getCompleteUser().subscribe((user) => {
       if (user) {
-        this.incomeService.getMonthlyIncome().subscribe((income) => {
+        this.incomeService.getMonthlyIncome(new Date()).subscribe((income) => {
           this.monthlyIncome = income;
         });
         this.incomeService

@@ -13,10 +13,18 @@ import {
   collectionData,
   limit,
 } from '@angular/fire/firestore';
-import { Observable, from, switchMap, map, Subject, combineLatest } from 'rxjs';
+import {
+  Observable,
+  from,
+  switchMap,
+  map,
+  Subject,
+  combineLatest,
+  tap,
+} from 'rxjs';
 import { AuthService } from '../Auth Service/auth-service.service';
 import { inject } from '@angular/core';
-import { getDoc, orderBy, query, Timestamp } from 'firebase/firestore';
+import { getDoc, orderBy, query, Timestamp, where } from 'firebase/firestore';
 import { TotalIncomeService } from '../Total-Income Service/total-income.service';
 
 @Injectable({
@@ -41,7 +49,7 @@ export class IncomeService {
           throw new Error('User not authenticated');
         }
         const userDoc = doc(this.firestore, 'users', user.uid);
-        return collection(userDoc, 'IncomeList');
+        return collection(userDoc, `IncomeList`);
       })
     );
   }
@@ -64,16 +72,16 @@ export class IncomeService {
           throw new Error('User not authenticated');
         }
         const userDoc = doc(this.firestore, 'users', user.uid);
-        const incomeCollection = collection(userDoc, 'IncomeList');
+        const expenseCollection = collection(userDoc, 'IncomeList');
         const { id, ...incomeData } = income;
-        const incomeDataWithTimestamp = {
+        const expenseDataWithTimestamp = {
           ...incomeData,
           date:
             income.date instanceof Timestamp
               ? income.date
               : Timestamp.fromDate(income.date as Date),
         };
-        return from(addDoc(incomeCollection, incomeDataWithTimestamp)).pipe(
+        return from(addDoc(expenseCollection, expenseDataWithTimestamp)).pipe(
           switchMap((docRef) => {
             this.incomeSourceAdded.next();
             return this.getTotalIncome().pipe(
@@ -150,16 +158,6 @@ export class IncomeService {
     );
   }
 
-  setYearlyIncome(amount: number): Observable<void> {
-    return this.authService.getUser().pipe(
-      switchMap((user) => {
-        if (!user) throw new Error('User not authenticated');
-        const userDocRef = doc(this.firestore, 'users', user.uid);
-        return from(updateDoc(userDocRef, { yearlyIncome: amount }));
-      })
-    );
-  }
-
   getYearlyIncome(): Observable<number> {
     return this.authService.getUser().pipe(
       switchMap((user) => {
@@ -175,20 +173,24 @@ export class IncomeService {
     );
   }
 
-  getMonthlyIncome(): Observable<number> {
+  getMonthlyIncome(currentDate: Date): Observable<number> {
     return combineLatest([
       this.authService.getCompleteUser(),
       this.getIncomeList(),
     ]).pipe(
       map(([user, incomeList]) => {
-        if (!Array.isArray(incomeList)) {
-          return 0;
-        }
-        const additional = incomeList.reduce(
-          (sum: number, inc: Income) => sum + (inc.amount || 0),
-          0
-        );
-        return +additional.toFixed(2);
+
+        const monthlyIncomeTotal = incomeList
+          .filter((income) => {
+            const incomeDate = new Date(income.date as string);
+            return (
+              incomeDate.getMonth() === currentDate.getMonth() &&
+              incomeDate.getFullYear() === currentDate.getFullYear()
+            );
+          })
+          .reduce((total, income) => (total = income.amount || 0), 0);
+
+        return +monthlyIncomeTotal.toFixed(2);
       })
     );
   }

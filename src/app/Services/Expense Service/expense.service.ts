@@ -154,22 +154,19 @@ export class ExpenseService {
     );
   }
 
-  getMonthlyExpense(): Observable<number> {
+  getMonthlyExpense(currentDate: Date): Observable<number> {
     return combineLatest([
       this.authService.getCompleteUser(),
       this.getExpenseList(),
     ]).pipe(
       map(([user, expenseList]) => {
-        const currentDate = new Date();
-        const currentMonth = currentDate.getMonth();
-        const currentYear = currentDate.getFullYear();
 
         const monthlyExpenseTotal = expenseList
           .filter((expense) => {
             const expenseDate = new Date(expense.date as string);
             return (
-              expenseDate.getMonth() === currentMonth &&
-              expenseDate.getFullYear() === currentYear
+              expenseDate.getMonth() === currentDate.getMonth() &&
+              expenseDate.getFullYear() === currentDate.getFullYear()
             );
           })
           .reduce((total, expense) => total + (expense.amount || 0), 0);

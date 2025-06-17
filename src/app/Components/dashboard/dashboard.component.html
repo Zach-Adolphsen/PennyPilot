@@ -51,7 +51,7 @@
           </div>
           <div class="mt-3">
             <p class="mb-1">
-              <strong>Total Income for the month of May:</strong>
+              <strong>Total Income for the month of {{ currentMonthName }}:</strong>
               {{ monthlyIncome | currency }}
             </p>
             <p class="mb-0">
@@ -101,7 +101,7 @@
           </div>
           <div class="mt-3">
             <p class="mb-0 text-secondary">
-              <strong>Total Expenses for the month of May:</strong>
+              <strong>Total Expenses for the month of {{currentMonthName}}:</strong>
               {{ monthlyExpense | currency }}
             </p>
           </div>

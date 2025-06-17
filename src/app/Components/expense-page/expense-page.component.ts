@@ -28,8 +28,11 @@ export class ExpensePageComponent implements OnInit {
   }
 
   calculateMonthlyExpense(): void {
-    this.expenseService.getMonthlyExpense().subscribe((monthlyExpense) => {
-      this.monthlyExpense = monthlyExpense;
-    });
+    const currentDate = new Date();
+    this.expenseService
+      .getMonthlyExpense(currentDate)
+      .subscribe((monthlyExpense) => {
+        this.monthlyExpense = monthlyExpense;
+      });
   }
 }

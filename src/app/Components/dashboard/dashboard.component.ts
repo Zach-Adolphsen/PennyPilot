@@ -6,11 +6,10 @@ import { IncomeService } from '../../Services/Income Service/income.service';
 import { ExpenseService } from '../../Services/Expense Service/expense.service';
 import { Expense } from '../../Interfaces/expense';
 import { Income } from '../../Interfaces/income';
-import { CommonModule, Time } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { MoneySavedComponent } from '../money-saved/money-saved.component';
 import { forkJoin } from 'rxjs';
-import { Timestamp } from 'firebase/firestore';
-import { BarChartService } from '../../Services/Bar Chart/bar-chart.service';
+import { BarChartService } from '../../Services/Charts/bar-chart.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,6 +24,9 @@ import { BarChartService } from '../../Services/Bar Chart/bar-chart.service';
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit {
+  /*
+    Services
+  */
   private IncomeService = inject(IncomeService);
   private ExpenseService = inject(ExpenseService);
   private BarChartService = inject(BarChartService);
@@ -33,6 +35,7 @@ export class DashboardComponent implements OnInit {
   monthlyIncome: number = 0;
   monthlyExpense: number = 0;
   finalFunds: number = 0;
+  currentMonthName: string = '';
 
   recentIncomes: Income[] = [];
   recentExpenses: Expense[] = [];
@@ -60,47 +63,62 @@ export class DashboardComponent implements OnInit {
 
   barChartData = this.BarChartService.barChartData;
   barChartOptions = this.BarChartService.barChartOptions;
-  currentMonthName: string = '';
 
   ngOnInit(): void {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1; // Adding 1 since getMonth() returns 0-11
+    const currentYear = currentDate.getFullYear();
+
+    console.log(`Querying for month: ${currentMonth}, year: ${currentYear}`);
+
+    this.IncomeService.getMonthlyIncome(currentDate).subscribe({
+      next: (total) => console.log('Monthly total:', total),
+      error: (error) => console.error('Error getting income:', error),
+    });
+
     this.BarChartService.updateBarChartData();
 
     this.BarChartService.updateBarChartLabels();
 
-    this.currentDate = new Date().toLocaleDateString();
+    this.currentDate = new Date().toLocaleDateString('default', {
+      month: 'long',
+      day: '2-digit',
+      year: 'numeric',
+    });
 
-    const today = new Date();
+    this.currentMonthName = new Date().toLocaleString('default', {
+      month: 'long',
+    });
 
-    this.currentMonthName = today.toLocaleString('default', { month: 'long' });
-
-    this.IncomeService.getMonthlyIncome().subscribe((income) => {
+    this.IncomeService.getMonthlyIncome(currentDate).subscribe((income) => {
       this.monthlyIncome = income;
       this.BarChartService.updateBarChartData();
     });
 
-    this.ExpenseService.getMonthlyExpense().subscribe((expense) => {
+    this.ExpenseService.getMonthlyExpense(currentDate).subscribe((expense) => {
       this.monthlyExpense = expense;
       this.BarChartService.updateBarChartData();
     });
 
-    this.loadRecentData();
+    this.LoadRecentFinancialData();
     this.calculateFinalFunds();
   }
 
-  loadRecentData(): void {
-    this.IncomeService.getRecentIncomes(3).subscribe((income) => {
+  LoadRecentFinancialData(): void {
+    this.IncomeService.getRecentIncomes().subscribe((income) => {
       this.recentIncomes = income;
     });
 
-    this.ExpenseService.getRecentExpenses(3).subscribe((expenses) => {
+    this.ExpenseService.getRecentExpenses().subscribe((expenses) => {
       this.recentExpenses = expenses;
     });
   }
 
   calculateFinalFunds(): void {
+    const currentDate = new Date();
     forkJoin({
-      income: this.IncomeService.getMonthlyIncome(),
-      expense: this.ExpenseService.getMonthlyExpense(),
+      income: this.IncomeService.getMonthlyIncome(currentDate),
+      expense: this.ExpenseService.getMonthlyExpense(currentDate),
     }).subscribe(
       ({ income, expense }) => {
         this.finalFunds = income - expense;

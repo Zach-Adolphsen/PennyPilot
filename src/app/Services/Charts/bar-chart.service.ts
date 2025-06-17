@@ -24,7 +24,7 @@ export class BarChartService {
   private getMonthName(currentMonth: number): string {
     const date = new Date();
     date.setMonth(currentMonth - 1);
-    return date.toLocaleString();
+    return date.toLocaleString('default', { month: 'long', year: 'numeric' });
   }
 
   barChartOptions: ChartOptions<'bar'> = {
@@ -46,16 +46,24 @@ export class BarChartService {
     datasets: [
       {
         label: 'Income',
-        data: [8333.33, 8749.77,  ], // Current month will be updated dynamically
+        data: [
+          0,
+          0,
+          0, // Placeholder, will be updated dynamically
+        ],
         backgroundColor: '#42A5F5',
       },
       {
         label: 'Expenses',
-        data: [4130.66, 4388.12, ], // Current month will be updated dynamically
+        data: [0, 0, 0], // Current month will be updated dynamically
         backgroundColor: '#FFA726',
       },
     ],
   };
+
+  currentMonthIndex = (this.barChartData.labels ?? []).indexOf(
+    this.currentMonthName
+  );
 
   updateBarChartLabels(): void {
     if (
@@ -64,10 +72,7 @@ export class BarChartService {
       this.barChartData.datasets &&
       this.barChartData.datasets.length >= 2
     ) {
-      const currentMonthIndex = this.barChartData.labels.indexOf(
-        this.currentMonthName
-      );
-      if (currentMonthIndex === -1) {
+      if (this.currentMonthIndex === -1) {
         this.barChartData.labels.push(this.currentMonthName);
         if (this.barChartData.labels.length > 3) {
           this.barChartData.labels.shift();
@@ -101,16 +106,15 @@ export class BarChartService {
     }
   }
 
-  async updateBarChartData(): Promise<void> {
+  updateBarChartData(): void {
+    const currentDate = new Date();
+
     if (
       this.barChartData &&
       this.barChartData.labels &&
       this.barChartData.datasets &&
       this.barChartData.datasets.length >= 2
     ) {
-      const currentMonthIndex: number = this.barChartData.labels.indexOf(
-        this.currentMonthName
-      );
       const incomeDataset = this.barChartData.datasets.find(
         (dataset) => dataset.label === 'Income'
       );
@@ -118,16 +122,18 @@ export class BarChartService {
         (dataset) => dataset.label === 'Expenses'
       );
 
-      if (incomeDataset?.data && currentMonthIndex !== -1) {
-        this.incomeService.getMonthlyIncome().subscribe((income) => {
-          incomeDataset.data[currentMonthIndex] = income;
+      if (incomeDataset?.data && this.currentMonthIndex !== -1) {
+        this.incomeService.getMonthlyIncome(currentDate).subscribe((income) => {
+          incomeDataset.data[this.currentMonthIndex] = income;
         });
       }
 
-      if (expenseDataset?.data && currentMonthIndex !== -1) {
-        this.expenseService.getMonthlyExpense().subscribe((expense) => {
-          expenseDataset.data[currentMonthIndex] = expense;
-        });
+      if (expenseDataset?.data && this.currentMonthIndex !== -1) {
+        this.expenseService
+          .getMonthlyExpense(currentDate)
+          .subscribe((expense) => {
+            expenseDataset.data[this.currentMonthIndex] = expense;
+          });
       }
     }
   }
