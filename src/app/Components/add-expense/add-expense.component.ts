@@ -17,7 +17,6 @@ function fourDigitYearValidator(
   control: FormControl
 ): { [key: string]: any } | null {
   const value = control.value;
-  // console.log('4DigitYearValidator: ' + value); //testing purposes
   if (value && typeof value === 'string') {
     const yearPart = value.substring(0, 4); // Assuming format YYYY-MM-DD
     if (yearPart.length !== 4 || isNaN(parseInt(yearPart, 10))) {
@@ -81,13 +80,9 @@ export class AddExpenseComponent {
         source: this.expenseForm.controls.source.value!,
         amount: this.expenseForm.controls.amount.value!,
       };
-      console.log(
-        'OnAddExpense() newExpense.date: ' + newExpense.date?.valueOf()
-      );
 
       this.expenseService.addExpense(newExpense).subscribe({
         next: (newId) => {
-          console.log('Expense added with ID:', newId);
           this.expenseForm.reset();
         },
         error: (error) => {

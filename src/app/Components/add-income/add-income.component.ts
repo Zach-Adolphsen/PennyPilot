@@ -19,7 +19,6 @@ function fourDigitYearValidator(
   control: FormControl
 ): { [key: string]: any } | null {
   const value = control.value;
-  // console.log('4DigitYearValidator: ' + value); //testing purposes
   if (value && typeof value === 'string') {
     const yearPart = value.substring(0, 4); // Assuming format YYYY-MM-DD
     if (yearPart.length !== 4 || isNaN(parseInt(yearPart, 10))) {
@@ -75,9 +74,6 @@ export class AddIncomeComponent implements OnInit {
     this.totalIncomeSubscription =
       this.totalIncomeService.totalIncome$.subscribe((total) => {
         this.totalIncome = total;
-        console.log(
-          'Updated Total Income in AddIncomeComponent: ' + this.totalIncome
-        );
       });
   }
 
@@ -103,11 +99,9 @@ export class AddIncomeComponent implements OnInit {
         source: this.incomeForm.controls.source.value!,
         amount: this.incomeForm.controls.amount.value!,
       };
-      console.log('OnAddIncome() newIncome.date: ' + newIncome.date?.valueOf());
 
       this.incomeService.addIncome(newIncome).subscribe({
         next: (newId) => {
-          console.log('Income added with ID:', newId);
           this.incomeForm.reset();
         },
         error: (error) => {

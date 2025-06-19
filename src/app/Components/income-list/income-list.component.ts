@@ -22,21 +22,16 @@ export class IncomeListComponent implements OnInit {
     this.incomeAddedSubscription = this.incomeService.incomeAdded$.subscribe(
       () => {
         this.incomeList$ = this.incomeService.getIncomeList();
-        this.incomeList$.subscribe((data) =>
-          console.log('Income List Data (after add):', data)
-        );
+        this.incomeList$.subscribe();
       }
     );
     this.incomeList$ = this.incomeService.getIncomeList(); // Initial load
-    this.incomeList$.subscribe((data) =>
-      console.log('Income List Data (initial):', data)
-    );
+    this.incomeList$.subscribe();
   }
 
   onDeleteIncome(incomeId: string): void {
     this.incomeService.deleteIncome(incomeId).subscribe({
       next: () => {
-        console.log('Income deleted:', incomeId);
         this.incomeList$ = this.incomeService.getIncomeList(); // Refresh the list
       },
       error: (error) => {
@@ -47,13 +42,10 @@ export class IncomeListComponent implements OnInit {
 
   editIncome(income: Income): void {
     this.editingIncome = { ...income };
-    // Testing Reasons
-    console.log('Editing Income:', this.editingIncome);
   }
 
   saveIncome(): void {
     if (this.editingIncome) {
-      console.log('Saving Income:', this.editingIncome);
 
       // ----------- Check if amount is of number type (amount should be) ----------
       if (!(typeof this.editingIncome.amount === 'number')) {
@@ -85,12 +77,9 @@ export class IncomeListComponent implements OnInit {
 
       this.incomeService.updateIncome(this.editingIncome).subscribe({
         next: () => {
-          console.log('Income updated:', this.editingIncome);
           this.editingIncome = null;
           this.incomeList$ = this.incomeService.getIncomeList(); // Refresh the list
-          this.incomeList$.subscribe((data) =>
-            console.log('Income List Data (after save):', data)
-          );
+          this.incomeList$.subscribe();
         },
         error: (error) => {
           console.error('Error updating income:', error);

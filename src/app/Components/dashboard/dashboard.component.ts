@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
 import { RouterLink, RouterModule } from '@angular/router';
@@ -8,8 +8,9 @@ import { Expense } from '../../Interfaces/expense';
 import { Income } from '../../Interfaces/income';
 import { CommonModule } from '@angular/common';
 import { MoneySavedComponent } from '../money-saved/money-saved.component';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { BarChartService } from '../../Services/Charts/bar-chart.service';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,7 +24,7 @@ import { BarChartService } from '../../Services/Charts/bar-chart.service';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   /*
     Services
   */
@@ -38,7 +39,8 @@ export class DashboardComponent implements OnInit {
   recentIncomes: Income[] = [];
   recentExpenses: Expense[] = [];
 
-  @ViewChild('barChart') barChartRef: any;
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
+  private chartUpdateSubscription?: Subscription;
 
   currentDate: string = '';
   currentMonthName: string = '';
@@ -68,24 +70,6 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     const currentDate = new Date();
 
-    console.log(
-      `Querying for month: ${
-        currentDate.getMonth() + 1
-      }, year: ${currentDate.getFullYear()}`
-    );
-
-    this.IncomeService.getMonthlyIncome(
-      currentDate.getMonth(),
-      currentDate.getFullYear()
-    ).subscribe({
-      next: (total) => console.log('Monthly total:', total),
-      error: (error) => console.error('Error getting income:', error),
-    });
-
-    this.BarChartService.updateBarChartData();
-
-    this.BarChartService.updateBarChartLabels();
-
     this.currentDate = new Date().toLocaleDateString('default', {
       month: 'long',
       day: '2-digit',
@@ -96,21 +80,46 @@ export class DashboardComponent implements OnInit {
       month: 'long',
     });
 
+    this.BarChartService.updateBarChartData();
+
+    // Subscribe to notifications from BarChartService to update the chart view
+    this.chartUpdateSubscription =
+      this.BarChartService.barChartDataUpdated$.subscribe(() => {
+        this.barChartData = {
+          ...this.BarChartService.barChartData,
+          datasets: [
+            ...this.BarChartService.barChartData.datasets.map((ds) => ({
+              ...ds,
+              data: [...(ds.data || [])],
+            })),
+          ],
+          labels: [...(this.BarChartService.barChartData.labels || [])],
+        };
+
+        if (this.chart) {
+          this.chart.update();
+        }
+      });
+
+    // Fetch monthly income for dashboard display
     this.IncomeService.getMonthlyIncome(
       currentDate.getMonth(),
       currentDate.getFullYear()
     ).subscribe((income) => {
       this.monthlyIncome = income;
-      // this.BarChartService.updateBarChartData();
+      this.calculateFinalFunds();
     });
 
-    this.ExpenseService.getMonthlyExpense(currentDate.getMonth(), currentDate.getFullYear()).subscribe((expense) => {
+    // Fetch monthly expense for dashboard display
+    this.ExpenseService.getMonthlyExpense(
+      currentDate.getMonth(),
+      currentDate.getFullYear()
+    ).subscribe((expense) => {
       this.monthlyExpense = expense;
-      // this.BarChartService.updateBarChartData();
+      this.calculateFinalFunds();
     });
 
     this.LoadRecentFinancialData();
-    this.calculateFinalFunds();
   }
 
   LoadRecentFinancialData(): void {
@@ -124,21 +133,17 @@ export class DashboardComponent implements OnInit {
   }
 
   calculateFinalFunds(): void {
-    const currentDate = new Date();
-    forkJoin({
-      income: this.IncomeService.getMonthlyIncome(
-        currentDate.getMonth(),
-        currentDate.getFullYear()
-      ),
-      expense: this.ExpenseService.getMonthlyExpense(currentDate.getMonth(), currentDate.getFullYear()),
-    }).subscribe(
-      ({ income, expense }) => {
-        this.finalFunds = income - expense;
-        console.log(`Final funds after expenses: $${this.finalFunds}`);
-      },
-      (error) => {
-        console.error('Error fetching income or expense:', error);
-      }
-    );
+    if (
+      typeof this.monthlyIncome === 'number' &&
+      typeof this.monthlyExpense === 'number'
+    ) {
+      this.finalFunds = this.monthlyIncome - this.monthlyExpense;
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.chartUpdateSubscription) {
+      this.chartUpdateSubscription.unsubscribe();
+    }
   }
 }

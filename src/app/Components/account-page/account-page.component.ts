@@ -28,13 +28,8 @@ export class AccountPageComponent {
   ngOnInit() {
     // Subscribe here for side effects like calculating savingsGoal
     // or if you need the data imperatively in your methods.
-    // The console.log here will still fire on every real-time update.
     this.userData$.subscribe((data) => {
       this.userData = data ?? undefined; // Update local copy for methods
-      console.log(
-        'Combined user data received (via real-time update):',
-        this.userData
-      );
     });
   }
 

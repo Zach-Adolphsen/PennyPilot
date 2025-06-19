@@ -22,21 +22,16 @@ export class ExpenseListComponent implements OnInit {
     this.expenseAddedSubscription = this.expenseService.expenseAdded$.subscribe(
       () => {
         this.expenseList$ = this.expenseService.getExpenseList(); // Refresh the list
-        this.expenseList$.subscribe((data) =>
-          console.log('Expense List Data (after add):', data)
-        );
+        this.expenseList$.subscribe();
       }
     );
     this.expenseList$ = this.expenseService.getExpenseList(); // Initial load
-    this.expenseList$.subscribe((data) =>
-      console.log('Expense List Data (initial):', data)
-    );
+    this.expenseList$.subscribe();
   }
 
   onDeleteExpense(expenseId: string): void {
     this.expenseService.deleteExpense(expenseId).subscribe({
       next: () => {
-        console.log('Expense deleted:', expenseId);
         this.expenseList$ = this.expenseService.getExpenseList(); // Refresh the list
       },
       error: (error) => {
@@ -47,13 +42,10 @@ export class ExpenseListComponent implements OnInit {
 
   editExpense(expense: Expense): void {
     this.editingExpense = { ...expense };
-    // Testing Reasons
-    console.log('Editing Expense:', this.editingExpense);
   }
 
   saveExpense(): void {
     if (this.editingExpense) {
-      console.log('Saving Expense:', this.editingExpense);
 
       // ----------- Check if amount is of number type (amount should be) ----------
       if (!(typeof this.editingExpense.amount === 'number')) {
@@ -85,12 +77,9 @@ export class ExpenseListComponent implements OnInit {
 
       this.expenseService.updateExpense(this.editingExpense).subscribe({
         next: () => {
-          console.log('Expense updated:', this.editingExpense);
           this.editingExpense = null;
           this.expenseList$ = this.expenseService.getExpenseList(); // Refresh the list
-          this.expenseList$.subscribe((data) =>
-            console.log('Expense List Data (after save):', data)
-          );
+          this.expenseList$.subscribe();
         },
         error: (error) => {
           console.error('Error updating expense:', error);

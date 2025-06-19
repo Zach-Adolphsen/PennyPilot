@@ -21,6 +21,7 @@ import {
   Subject,
   combineLatest,
   tap,
+  take,
 } from 'rxjs';
 import { AuthService } from '../Auth Service/auth-service.service';
 import { inject } from '@angular/core';
@@ -44,6 +45,7 @@ export class IncomeService {
     CollectionReference<DocumentData>
   > {
     return this.authService.getUser().pipe(
+      take(1), // Ensure this completes after one emission
       map((user) => {
         if (!user) {
           throw new Error('User not authenticated');
@@ -178,20 +180,32 @@ export class IncomeService {
     currentDateYear: number
   ): Observable<number> {
     return combineLatest([
-      this.authService.getCompleteUser(),
+      this.authService.getCompleteUser().pipe(
+        take(1) // Ensure this completes after one emission
+      ),
       this.getIncomeList(),
     ]).pipe(
       map(([user, incomeList]) => {
+        if (!user) {
+          console.warn(
+            `IncomeService: No user found for income calculation ${
+              currentDateMonth + 1
+            }/${currentDateYear}. Returning 0.`
+          );
+          return 0;
+        }
         const monthlyIncomeTotal = incomeList
           .filter((income) => {
-            const incomeDate = new Date(income.date as Date);
+            const incomeDate = new Date(income.date as string);
             return (
               incomeDate.getMonth() === currentDateMonth &&
               incomeDate.getFullYear() === currentDateYear
             );
           })
-          .reduce((total, income) => (total = Number(income.amount) || 0), 0);
-
+          .reduce(
+            (accumulator, income) => accumulator + (Number(income.amount) || 0),
+            0
+          ); // Corrected reduce
         return +monthlyIncomeTotal.toFixed(2);
       })
     );

@@ -4,7 +4,7 @@ import {
   DocumentData,
   Firestore,
   collectionData,
-  limit, // Import from AngularFire
+  limit,
 } from '@angular/fire/firestore';
 import { Observable, from, switchMap, map, Subject, combineLatest } from 'rxjs';
 
@@ -20,6 +20,7 @@ import {
   Timestamp,
   updateDoc,
 } from 'firebase/firestore';
+import { tap, take } from 'rxjs/operators'; // Add take
 import { Expense } from '../../Interfaces/expense';
 import { TotalExpenseService } from '../Total-Expense/total-expense.service';
 
@@ -40,6 +41,7 @@ export class ExpenseService {
     CollectionReference<DocumentData>
   > {
     return this.authService.getUser().pipe(
+      take(1), // Ensure this completes after one emission
       map((user) => {
         if (!user) {
           throw new Error('User not authenticated');
@@ -107,12 +109,12 @@ export class ExpenseService {
               const formattedDate = date
                 ? date.toDate().toLocaleDateString()
                 : '';
-              const incomeObject = {
+              const expenseObject = {
                 id: doc.id,
                 ...data,
                 date: formattedDate,
               } as Expense;
-              return incomeObject;
+              return expenseObject;
             });
             return expenses;
           })
@@ -159,20 +161,29 @@ export class ExpenseService {
     currentYear: number
   ): Observable<number> {
     return combineLatest([
-      this.authService.getCompleteUser(),
+      this.authService.getCompleteUser().pipe(
+        take(1) // Ensure this completes after one emission
+      ),
       this.getExpenseList(),
     ]).pipe(
       map(([user, expenseList]) => {
+        if (!user) {
+          console.warn(
+            `ExpenseService: No user found for expense calculation ${
+              currentMonth + 1
+            }/${currentYear}. Returning 0.`
+          );
+          return 0;
+        }
         const monthlyExpenseTotal = expenseList
           .filter((expense) => {
-            const expenseDate = new Date(expense.date as Date);
+            const expenseDate = new Date(expense.date as string);
             return (
               expenseDate.getMonth() === currentMonth &&
               expenseDate.getFullYear() === currentYear
             );
           })
           .reduce((total, expense) => total + (Number(expense.amount) || 0), 0);
-
         return +monthlyExpenseTotal.toFixed(2);
       })
     );

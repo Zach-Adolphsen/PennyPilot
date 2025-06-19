@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { IncomeService } from '../Income Service/income.service';
 import { ExpenseService } from '../Expense Service/expense.service';
+import { forkJoin, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -10,21 +11,13 @@ export class BarChartService {
   private incomeService = inject(IncomeService);
   private expenseService = inject(ExpenseService);
 
-  constructor() {}
+  barChartData!: ChartData<'bar'>;
 
-  pastMonthName2: string = this.getMonthName(this.getCurrentMonth() - 1);
-  pastMonthName1: string = this.getMonthName(this.getCurrentMonth());
-  currentMonthName: string = this.getMonthName(this.getCurrentMonth() + 1);
+  private barChartDataUpdated = new Subject<void>();
+  public barChartDataUpdated$ = this.barChartDataUpdated.asObservable();
 
-  private getCurrentMonth(): number {
-    const date: Date = new Date();
-    return date.getUTCMonth();
-  }
-
-  private getMonthName(currentMonth: number): string {
-    const date = new Date();
-    date.setMonth(currentMonth - 1);
-    return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+  constructor() {
+    this.initializeChartStructure();
   }
 
   barChartOptions: ChartOptions<'bar'> = {
@@ -41,26 +34,41 @@ export class BarChartService {
     },
   };
 
-  barChartData: ChartData<'bar'> = {
-    labels: [this.pastMonthName2, this.pastMonthName1, this.currentMonthName],
-    datasets: [
-      {
-        label: 'Income',
-        data: [0, 0, 0],
-        backgroundColor: '#42A5F5',
-      },
-      {
-        label: 'Expenses',
-        data: [0, 0, 0], // Current month will be updated dynamically
-        backgroundColor: '#FFA726',
-      },
-    ],
-  };
+  private getMonthName(monthIndex: number, year: number): string {
+    const date = new Date(year, monthIndex, 1);
+    return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+  }
 
-  currentMonthIndex = (this.barChartData.labels ?? []).indexOf(
-    this.currentMonthName
-  );
+  private initializeChartStructure(): void {
+    const d0 = new Date(); // Current month
+    const d1 = new Date(d0);
+    d1.setMonth(d0.getMonth() - 1); // 1 month ago
+    const d2 = new Date(d0);
+    d2.setMonth(d0.getMonth() - 2); // 2 months ago
 
+    const label2 = this.getMonthName(d2.getMonth(), d2.getFullYear());
+    const label1 = this.getMonthName(d1.getMonth(), d1.getFullYear());
+    const label0 = this.getMonthName(d0.getMonth(), d0.getFullYear());
+
+    this.barChartData = {
+      labels: [label2, label1, label0], // Order: month-2, month-1, current month
+      datasets: [
+        {
+          label: 'Income',
+          data: [0, 0, 0], // Initialize with zeros
+          backgroundColor: '#42A5F5',
+        },
+        {
+          label: 'Expenses',
+          data: [0, 0, 0], // Initialize with zeros
+          backgroundColor: '#FFA726',
+        },
+      ],
+    };
+  }
+
+  // This method might be redundant if labels are always for the last 3 months.
+  // updateBarChartData now handles refreshing labels.
   updateBarChartLabels(): void {
     if (
       this.barChartData &&
@@ -68,41 +76,25 @@ export class BarChartService {
       this.barChartData.datasets &&
       this.barChartData.datasets.length >= 2
     ) {
-      if (this.currentMonthIndex === -1) {
-        this.barChartData.labels.push(this.currentMonthName);
-        if (this.barChartData.labels.length > 3) {
-          this.barChartData.labels.shift();
-          if (
-            this.barChartData.datasets[0] &&
-            this.barChartData.datasets[0].data
-          ) {
-            this.barChartData.datasets[0].data.shift();
-          }
-          if (
-            this.barChartData.datasets[1] &&
-            this.barChartData.datasets[1].data
-          ) {
-            this.barChartData.datasets[1].data.shift();
-          }
-        } else {
-          if (
-            this.barChartData.datasets[0] &&
-            this.barChartData.datasets[0].data
-          ) {
-            this.barChartData.datasets[0].data.push(0);
-          }
-          if (
-            this.barChartData.datasets[1] &&
-            this.barChartData.datasets[1].data
-          ) {
-            this.barChartData.datasets[1].data.push(0);
-          }
-        }
+      const d0 = new Date();
+      const currentMonthLabel = this.getMonthName(
+        d0.getMonth(),
+        d0.getFullYear()
+      );
+
+      // If the last label is not the current month, re-initialize.
+      // This handles the case where the app runs across a month boundary.
+      if (
+        this.barChartData.labels[this.barChartData.labels.length - 1] !==
+        currentMonthLabel
+      ) {
+        this.initializeChartStructure();
       }
     }
   }
 
   updateBarChartData(): void {
+
     if (
       this.barChartData &&
       this.barChartData.labels &&
@@ -116,59 +108,59 @@ export class BarChartService {
         (dataset) => dataset.label === 'Expenses'
       );
 
-      const currentDate = new Date();
-
-      const lastMonth = new Date(currentDate);
-      lastMonth.setMonth(lastMonth.getMonth() - 1);
-
-      const lastMonth2 = new Date(lastMonth);
-      lastMonth2.setMonth(lastMonth2.getMonth() - 1);
-
-      if (incomeDataset?.data && this.currentMonthIndex !== -1) {
-        this.incomeService
-          .getMonthlyIncome(lastMonth2.getMonth(), lastMonth2.getFullYear())
-          .subscribe((income) => {
-            console.log('Current Month Income (April)) == ' + income);
-            incomeDataset.data[this.currentMonthIndex - 2] = income;
-          });
-
-        this.incomeService
-          .getMonthlyIncome(lastMonth.getMonth(), lastMonth.getFullYear())
-          .subscribe((income) => {
-            console.log('Current Month Income (May) == ' + income);
-            incomeDataset.data[this.currentMonthIndex - 1] = income;
-          });
-
-        this.incomeService
-          .getMonthlyIncome(currentDate.getMonth(), currentDate.getFullYear())
-          .subscribe((income) => {
-            console.log('Current Month Income (June) == ' + income);
-            incomeDataset.data[this.currentMonthIndex] = income;
-          });
+      if (!incomeDataset || !expenseDataset) {
+        console.error('Income or Expense dataset not found in barChartData');
+        return;
       }
 
-      if (expenseDataset?.data && this.currentMonthIndex !== -1) {
-        this.expenseService
-          .getMonthlyExpense(lastMonth2.getMonth(), lastMonth2.getFullYear())
-          .subscribe((expense) => {
-            console.log('Current Month Expense (April)) == ' + expense);
-            expenseDataset.data[this.currentMonthIndex - 2] = expense;
-          });
+      const d0 = new Date(); // Current month
+      const d1 = new Date(d0);
+      d1.setMonth(d0.getMonth() - 1); // 1 month ago
+      const d2 = new Date(d0);
+      d2.setMonth(d0.getMonth() - 2); // 2 months ago
 
-        this.expenseService
-          .getMonthlyExpense(lastMonth.getMonth(), lastMonth.getFullYear())
-          .subscribe((expense) => {
-            console.log('Current Month Expense (May) == ' + expense);
-            expenseDataset.data[this.currentMonthIndex - 1] = expense;
-          });
+      // Ensure labels are current
+      const label2 = this.getMonthName(d2.getMonth(), d2.getFullYear());
+      const label1 = this.getMonthName(d1.getMonth(), d1.getFullYear());
+      const label0 = this.getMonthName(d0.getMonth(), d0.getFullYear());
 
-        this.expenseService
-          .getMonthlyExpense(currentDate.getMonth(), currentDate.getFullYear())
-          .subscribe((expense) => {
-            console.log('Current Month Expense (April)) == ' + expense);
-            expenseDataset.data[this.currentMonthIndex] = expense;
-          });
+      if (this.barChartData.labels) {
+        this.barChartData.labels[0] = label2;
+        this.barChartData.labels[1] = label1;
+        this.barChartData.labels[2] = label0;
+      } else {
+        this.barChartData.labels = [label2, label1, label0];
       }
+
+      const incomeObservables: Observable<number>[] = [
+        this.incomeService.getMonthlyIncome(d2.getMonth(), d2.getFullYear()),
+        this.incomeService.getMonthlyIncome(d1.getMonth(), d1.getFullYear()),
+        this.incomeService.getMonthlyIncome(d0.getMonth(), d0.getFullYear()),
+      ];
+
+      const expenseObservables: Observable<number>[] = [
+        this.expenseService.getMonthlyExpense(d2.getMonth(), d2.getFullYear()),
+        this.expenseService.getMonthlyExpense(d1.getMonth(), d1.getFullYear()),
+        this.expenseService.getMonthlyExpense(d0.getMonth(), d0.getFullYear()),
+      ];
+
+      forkJoin({
+        incomes: forkJoin(incomeObservables),
+        expenses: forkJoin(expenseObservables),
+      }).subscribe({
+        next: ({ incomes, expenses }) => {
+          // Data is ordered: [month-2, month-1, current month]
+          // Assign new array references to help change detection
+          incomeDataset.data = [...incomes];
+          expenseDataset.data = [...expenses];
+
+          // Notify subscribers that data has been internally updated
+          this.barChartDataUpdated.next();
+        },
+        error: (err) => {
+          console.error('BarChartService: Error fetching chart data:', err);
+        },
+      });
     }
   }
 }

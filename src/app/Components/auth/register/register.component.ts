@@ -88,8 +88,6 @@ export class RegisterComponent implements OnInit {
 
     this.authService.register(user);
 
-    console.log('User data being registered:', user); // used for testing
-
     this.userAccountRegister.reset(); // clear form
 
     // this.router.navigate(['/login']); // redirect user to login page
