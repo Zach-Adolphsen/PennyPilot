@@ -59,8 +59,8 @@ export class AddIncomeComponent implements OnInit {
       source: FormControl<string | null>;
       amount: FormControl<number | null>;
     }>({
-      id: this.fb.control(''), // Removed Validators.required
-      date: this.fb.control('', [Validators.required, fourDigitYearValidator]), // Apply the custom validator
+      id: this.fb.control(''),
+      date: this.fb.control('', [Validators.required, fourDigitYearValidator]),
       source: this.fb.control('', Validators.required),
       amount: this.fb.control(null, [
         Validators.required,

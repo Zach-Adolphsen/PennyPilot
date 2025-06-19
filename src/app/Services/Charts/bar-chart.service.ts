@@ -46,11 +46,7 @@ export class BarChartService {
     datasets: [
       {
         label: 'Income',
-        data: [
-          0,
-          0,
-          0, // Placeholder, will be updated dynamically
-        ],
+        data: [0, 0, 0],
         backgroundColor: '#42A5F5',
       },
       {
@@ -107,8 +103,6 @@ export class BarChartService {
   }
 
   updateBarChartData(): void {
-    const currentDate = new Date();
-
     if (
       this.barChartData &&
       this.barChartData.labels &&
@@ -122,16 +116,56 @@ export class BarChartService {
         (dataset) => dataset.label === 'Expenses'
       );
 
+      const currentDate = new Date();
+
+      const lastMonth = new Date(currentDate);
+      lastMonth.setMonth(lastMonth.getMonth() - 1);
+
+      const lastMonth2 = new Date(lastMonth);
+      lastMonth2.setMonth(lastMonth2.getMonth() - 1);
+
       if (incomeDataset?.data && this.currentMonthIndex !== -1) {
-        this.incomeService.getMonthlyIncome(currentDate).subscribe((income) => {
-          incomeDataset.data[this.currentMonthIndex] = income;
-        });
+        this.incomeService
+          .getMonthlyIncome(lastMonth2.getMonth(), lastMonth2.getFullYear())
+          .subscribe((income) => {
+            console.log('Current Month Income (April)) == ' + income);
+            incomeDataset.data[this.currentMonthIndex - 2] = income;
+          });
+
+        this.incomeService
+          .getMonthlyIncome(lastMonth.getMonth(), lastMonth.getFullYear())
+          .subscribe((income) => {
+            console.log('Current Month Income (May) == ' + income);
+            incomeDataset.data[this.currentMonthIndex - 1] = income;
+          });
+
+        this.incomeService
+          .getMonthlyIncome(currentDate.getMonth(), currentDate.getFullYear())
+          .subscribe((income) => {
+            console.log('Current Month Income (June) == ' + income);
+            incomeDataset.data[this.currentMonthIndex] = income;
+          });
       }
 
       if (expenseDataset?.data && this.currentMonthIndex !== -1) {
         this.expenseService
-          .getMonthlyExpense(currentDate)
+          .getMonthlyExpense(lastMonth2.getMonth(), lastMonth2.getFullYear())
           .subscribe((expense) => {
+            console.log('Current Month Expense (April)) == ' + expense);
+            expenseDataset.data[this.currentMonthIndex - 2] = expense;
+          });
+
+        this.expenseService
+          .getMonthlyExpense(lastMonth.getMonth(), lastMonth.getFullYear())
+          .subscribe((expense) => {
+            console.log('Current Month Expense (May) == ' + expense);
+            expenseDataset.data[this.currentMonthIndex - 1] = expense;
+          });
+
+        this.expenseService
+          .getMonthlyExpense(currentDate.getMonth(), currentDate.getFullYear())
+          .subscribe((expense) => {
+            console.log('Current Month Expense (April)) == ' + expense);
             expenseDataset.data[this.currentMonthIndex] = expense;
           });
       }

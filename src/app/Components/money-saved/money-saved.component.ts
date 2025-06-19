@@ -28,16 +28,18 @@ export class MoneySavedComponent {
 
   calculateSavings() {
     const currentDate = new Date();
-    this.incomeService.getMonthlyIncome(currentDate).subscribe(
-      (income) => {
-        this.monthlyIncome = income;
-        this.halfMonthlyIncome = income / 2;
-        this.updateSavings();
-      },
-      (error) => console.error('Error fetching income:', error)
-    );
+    this.incomeService
+      .getMonthlyIncome(currentDate.getMonth(), currentDate.getFullYear())
+      .subscribe(
+        (income) => {
+          this.monthlyIncome = income;
+          this.halfMonthlyIncome = income / 2;
+          this.updateSavings();
+        },
+        (error) => console.error('Error fetching income:', error)
+      );
 
-    this.expenseService.getMonthlyExpense(currentDate).subscribe(
+    this.expenseService.getMonthlyExpense(currentDate.getMonth(), currentDate.getFullYear()).subscribe(
       (expense) => {
         this.monthlyExpense = expense;
         this.updateSavings();

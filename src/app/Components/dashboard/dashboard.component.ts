@@ -31,16 +31,17 @@ export class DashboardComponent implements OnInit {
   private ExpenseService = inject(ExpenseService);
   private BarChartService = inject(BarChartService);
 
-  currentDate: string = '';
   monthlyIncome: number = 0;
   monthlyExpense: number = 0;
   finalFunds: number = 0;
-  currentMonthName: string = '';
 
   recentIncomes: Income[] = [];
   recentExpenses: Expense[] = [];
 
   @ViewChild('barChart') barChartRef: any;
+
+  currentDate: string = '';
+  currentMonthName: string = '';
 
   pieChartData: ChartData<'pie', number[]> = {
     labels: ['Necessities', 'Wants', 'Savings'],
@@ -66,12 +67,17 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     const currentDate = new Date();
-    const currentMonth = currentDate.getMonth() + 1; // Adding 1 since getMonth() returns 0-11
-    const currentYear = currentDate.getFullYear();
 
-    console.log(`Querying for month: ${currentMonth}, year: ${currentYear}`);
+    console.log(
+      `Querying for month: ${
+        currentDate.getMonth() + 1
+      }, year: ${currentDate.getFullYear()}`
+    );
 
-    this.IncomeService.getMonthlyIncome(currentDate).subscribe({
+    this.IncomeService.getMonthlyIncome(
+      currentDate.getMonth(),
+      currentDate.getFullYear()
+    ).subscribe({
       next: (total) => console.log('Monthly total:', total),
       error: (error) => console.error('Error getting income:', error),
     });
@@ -90,14 +96,17 @@ export class DashboardComponent implements OnInit {
       month: 'long',
     });
 
-    this.IncomeService.getMonthlyIncome(currentDate).subscribe((income) => {
+    this.IncomeService.getMonthlyIncome(
+      currentDate.getMonth(),
+      currentDate.getFullYear()
+    ).subscribe((income) => {
       this.monthlyIncome = income;
-      this.BarChartService.updateBarChartData();
+      // this.BarChartService.updateBarChartData();
     });
 
-    this.ExpenseService.getMonthlyExpense(currentDate).subscribe((expense) => {
+    this.ExpenseService.getMonthlyExpense(currentDate.getMonth(), currentDate.getFullYear()).subscribe((expense) => {
       this.monthlyExpense = expense;
-      this.BarChartService.updateBarChartData();
+      // this.BarChartService.updateBarChartData();
     });
 
     this.LoadRecentFinancialData();
@@ -117,8 +126,11 @@ export class DashboardComponent implements OnInit {
   calculateFinalFunds(): void {
     const currentDate = new Date();
     forkJoin({
-      income: this.IncomeService.getMonthlyIncome(currentDate),
-      expense: this.ExpenseService.getMonthlyExpense(currentDate),
+      income: this.IncomeService.getMonthlyIncome(
+        currentDate.getMonth(),
+        currentDate.getFullYear()
+      ),
+      expense: this.ExpenseService.getMonthlyExpense(currentDate.getMonth(), currentDate.getFullYear()),
     }).subscribe(
       ({ income, expense }) => {
         this.finalFunds = income - expense;

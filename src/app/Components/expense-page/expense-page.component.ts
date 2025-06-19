@@ -30,7 +30,7 @@ export class ExpensePageComponent implements OnInit {
   calculateMonthlyExpense(): void {
     const currentDate = new Date();
     this.expenseService
-      .getMonthlyExpense(currentDate)
+      .getMonthlyExpense(currentDate.getMonth(), currentDate.getFullYear())
       .subscribe((monthlyExpense) => {
         this.monthlyExpense = monthlyExpense;
       });

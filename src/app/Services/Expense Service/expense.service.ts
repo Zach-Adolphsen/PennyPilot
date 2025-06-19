@@ -154,27 +154,30 @@ export class ExpenseService {
     );
   }
 
-  getMonthlyExpense(currentDate: Date): Observable<number> {
+  getMonthlyExpense(
+    currentMonth: number,
+    currentYear: number
+  ): Observable<number> {
     return combineLatest([
       this.authService.getCompleteUser(),
       this.getExpenseList(),
     ]).pipe(
       map(([user, expenseList]) => {
-
         const monthlyExpenseTotal = expenseList
           .filter((expense) => {
-            const expenseDate = new Date(expense.date as string);
+            const expenseDate = new Date(expense.date as Date);
             return (
-              expenseDate.getMonth() === currentDate.getMonth() &&
-              expenseDate.getFullYear() === currentDate.getFullYear()
+              expenseDate.getMonth() === currentMonth &&
+              expenseDate.getFullYear() === currentYear
             );
           })
-          .reduce((total, expense) => total + (expense.amount || 0), 0);
+          .reduce((total, expense) => total + (Number(expense.amount) || 0), 0);
 
         return +monthlyExpenseTotal.toFixed(2);
       })
     );
   }
+
   getRecentExpenses(limitCount: number = 3): Observable<Expense[]> {
     return this.getUserExpenseCollection().pipe(
       switchMap((expenseCollection) => {

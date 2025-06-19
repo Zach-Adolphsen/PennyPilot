@@ -24,7 +24,7 @@ import {
 } from 'rxjs';
 import { AuthService } from '../Auth Service/auth-service.service';
 import { inject } from '@angular/core';
-import { getDoc, orderBy, query, Timestamp, where } from 'firebase/firestore';
+import { getDoc, orderBy, query, Timestamp } from 'firebase/firestore';
 import { TotalIncomeService } from '../Total-Income Service/total-income.service';
 
 @Injectable({
@@ -173,22 +173,24 @@ export class IncomeService {
     );
   }
 
-  getMonthlyIncome(currentDate: Date): Observable<number> {
+  getMonthlyIncome(
+    currentDateMonth: number,
+    currentDateYear: number
+  ): Observable<number> {
     return combineLatest([
       this.authService.getCompleteUser(),
       this.getIncomeList(),
     ]).pipe(
       map(([user, incomeList]) => {
-
         const monthlyIncomeTotal = incomeList
           .filter((income) => {
-            const incomeDate = new Date(income.date as string);
+            const incomeDate = new Date(income.date as Date);
             return (
-              incomeDate.getMonth() === currentDate.getMonth() &&
-              incomeDate.getFullYear() === currentDate.getFullYear()
+              incomeDate.getMonth() === currentDateMonth &&
+              incomeDate.getFullYear() === currentDateYear
             );
           })
-          .reduce((total, income) => (total = income.amount || 0), 0);
+          .reduce((total, income) => (total = Number(income.amount) || 0), 0);
 
         return +monthlyIncomeTotal.toFixed(2);
       })
