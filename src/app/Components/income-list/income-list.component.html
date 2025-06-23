@@ -1,7 +1,7 @@
 <div class="card shadow-sm">
   <div class="card-body">
     <div class="card-title">
-      <h3 >List of Income Source(s)</h3>
+      <h3>List of Income Source(s)</h3>
       <hr />
     </div>
   </div>
@@ -20,8 +20,30 @@
       <hr />
     </div>
 
-    @for (income of incomeList$ | async; track $index;) { @if(editingIncome?.id
-    != income.id){
+    @for (income of incomeList$ | async; track income.id) { @if (editingIncome
+    && editingIncome.id === income.id) {
+    <!--== Edit Mode ==-->
+    <div class="input-group my-2">
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="editingIncome.date"
+      />
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="editingIncome.source"
+      />
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="editingIncome.amount"
+      />
+      <button class="btn btn-primary" (click)="saveIncome()">Save</button>
+      <button class="btn btn-primary" (click)="cancelEdit()">Cancel</button>
+    </div>
+    } @else {
+    <!--== Display Mode ==-->
     <div class="row mx-1">
       <div class="col-3">
         <p>{{ income.date }}</p>
@@ -29,10 +51,10 @@
       <div class="col-3">
         <p>{{ income.source }}</p>
       </div>
-      <div class="col-3">
+      <div class="col-2">
         <p>${{ income.amount }}</p>
       </div>
-      <div class="col-1 mx-1">
+      <div class="col-1 mx-2">
         <a class="btn" (click)="editIncome(income)">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -66,30 +88,14 @@
           <p>Delete</p>
         </button>
       </div>
-      <hr />
     </div>
-    } @else { @if (editingIncome != null) {
-    <div class="input-group my-3">
-      <input
-        type="text"
-        class="form-control"
-        [(ngModel)]="editingIncome.date"
-      />
-      <input
-        type="text"
-        class="form-control"
-        [(ngModel)]="editingIncome.source"
-      />
-      <input
-        type="number"
-        class="form-control"
-        [(ngModel)]="editingIncome.amount"
-      />
-      <div class="input-group-append">
-        <button class="btn btn-primary" (click)="saveIncome()">Save</button>
-        <button class="btn btn-primary" (click)="cancelEdit()">Cancel</button>
+    <hr />
+    } } @empty {
+    <div class="row mx-1 my-3">
+      <div class="col text-center text-muted">
+        <p>No income sources have been added yet.</p>
       </div>
     </div>
-    } } }
+    }
   </div>
 </div>

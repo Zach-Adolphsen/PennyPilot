@@ -7,8 +7,6 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  updateCurrentUser,
-  updatePhoneNumber,
   updateProfile,
   user,
   User,
@@ -16,7 +14,6 @@ import {
 import { Router } from '@angular/router';
 import { Firestore, doc, docData, setDoc } from '@angular/fire/firestore';
 import { map, Observable, of, switchMap } from 'rxjs';
-import { collection } from 'firebase/firestore';
 
 export interface UserInfo {
   fName: string;
@@ -91,6 +88,7 @@ export class AuthService {
       .then(() => {
         localStorage.removeItem('token');
         this.router.navigate(['/login']);
+        // console.log('Logged out');
       })
       .catch((err) => {
         alert(err.message);
@@ -139,4 +137,6 @@ export class AuthService {
       })
     );
   }
+
+  updateUserField(userField: string): void {}
 }

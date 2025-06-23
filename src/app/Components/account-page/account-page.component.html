@@ -1,4 +1,5 @@
-<div class="container" *ngIf="userData$ | async as user">
+@if(userData$ | async; as user){
+<div class="container">
   <div class="row my-4">
     <div class="card border border-1 p-3">
       <div class="card-body">
@@ -7,10 +8,38 @@
           <hr />
         </div>
 
+        @if(user.fname && user.lname){
         <div class="row text-center mb-3">
-          <h6 class="col">Legal Name</h6>
-          <p class="col text-end">{{ user.fname }} {{ user.lname }}</p>
+          <h6 class="col-5">Legal Name</h6>
+          <p class="col-4 text-end">{{ user.displayName }}</p>
         </div>
+
+        <div class="row text-center mb-3">
+          @if(isEditing && editingField == user.fname){
+          <h6 class="col-5">First Name</h6>
+          <input
+            type="text"
+            class="form-control col-4"
+            [(ngModel)]="user.fname"
+          />
+          <button class="col-2 mx-3 btn btn-danger" (click)="saveField()">Save</button>
+          }@else {
+          <h6 class="col-5">First Name</h6>
+          <p class="col-4 text-end">{{ user.fname }}</p>
+          <button
+            class="col-2 mx-3 btn btn-primary"
+            (click)="editField(user.fname)"
+          >
+            Update
+          </button>
+          }
+        </div>
+
+        <div class="row text-center mb-3">
+          <h6 class="col">Last Name</h6>
+          <p class="col text-end">{{ user.lname }}</p>
+        </div>
+        }
       </div>
     </div>
   </div>
@@ -31,9 +60,8 @@
     </div>
   </div>
 
-  <div class="row my-4">
-    <div class="col text-center">
-      <button class="btn btn-outline-success" (click)="logout()">Logout</button>
-    </div>
+  <div class="col text-center">
+    <button class="btn btn-outline-success" (click)="logout()">Logout</button>
   </div>
 </div>
+}

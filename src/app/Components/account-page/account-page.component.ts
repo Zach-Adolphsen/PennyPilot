@@ -20,21 +20,19 @@ export class AccountPageComponent {
 
   userData$: Observable<CombinedUser | null> =
     this.authService.getCompleteUser();
-  userData?: CombinedUser;
+
+  editingUser: CombinedUser | null = null;
   editingField: string | null = null;
-  updatedValue: any = '';
-  savingsGoal: number = 0;
+  isEditing: boolean = false;
 
-  ngOnInit() {
-    // Subscribe here for side effects like calculating savingsGoal
-    // or if you need the data imperatively in your methods.
-    this.userData$.subscribe((data) => {
-      this.userData = data ?? undefined; // Update local copy for methods
-    });
-  }
-
-  logout() {
+  logout(): void {
     this.authService.logout();
   }
-  darkMode = false;
+
+  editField(userField: string): void {
+    this.isEditing = true;
+    this.editingField = userField;
+  }
+
+  saveField(): void {}
 }
