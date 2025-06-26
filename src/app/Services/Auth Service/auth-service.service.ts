@@ -130,7 +130,10 @@ export class AuthService {
           map((firestoreUser) => ({
             uid: authUser.uid,
             email: authUser.email,
-            displayName: authUser.displayName,
+            displayName:
+              firestoreUser?.['fname'] && firestoreUser?.['lname']
+                ? `${firestoreUser?.['fname']} ${firestoreUser?.['lname']}`
+                : authUser.displayName,
             ...(firestoreUser || {}),
           }))
         );

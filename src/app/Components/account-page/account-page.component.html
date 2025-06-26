@@ -8,38 +8,77 @@
           <hr />
         </div>
 
+        <!-- Display Name (derived, not directly editable here) -->
         @if(user.fname && user.lname){
-        <div class="row text-center mb-3">
-          <h6 class="col-5">Legal Name</h6>
+        <div class="row text-center mb-3 align-items-center">
+          <h6 class="col-5 text-start">Legal Name</h6>
           <p class="col-4 text-end">{{ user.displayName }}</p>
         </div>
+        }
 
-        <div class="row text-center mb-3">
-          @if(isEditing && editingField == user.fname){
-          <h6 class="col-5">First Name</h6>
-          <input
-            type="text"
-            class="form-control col-4"
-            [(ngModel)]="user.fname"
-          />
-          <button class="col-2 mx-3 btn btn-danger" (click)="saveField()">Save</button>
+        <!-- First Name -->
+        <div class="row text-center mb-3 align-items-center">
+          <h6 class="col-5 text-start">First Name</h6>
+          @if(isEditing && editingField === 'fname'){
+          <div class="col-4">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="currentValue"
+            />
+          </div>
+          <div class="col-3 d-flex justify-content-end">
+            <button class="btn btn-success btn-sm me-2" (click)="saveField()">
+              Save
+            </button>
+            <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">
+              Cancel
+            </button>
+          </div>
           }@else {
-          <h6 class="col-5">First Name</h6>
           <p class="col-4 text-end">{{ user.fname }}</p>
-          <button
-            class="col-2 mx-3 btn btn-primary"
-            (click)="editField(user.fname)"
-          >
-            Update
-          </button>
+          <div class="col-3 d-flex justify-content-end">
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="editField('fname', user.fname)"
+            >
+              Update
+            </button>
+          </div>
           }
         </div>
 
-        <div class="row text-center mb-3">
-          <h6 class="col">Last Name</h6>
-          <p class="col text-end">{{ user.lname }}</p>
+        <!-- Last Name -->
+        <div class="row text-center mb-3 align-items-center">
+          <h6 class="col-5 text-start">Last Name</h6>
+          @if(isEditing && editingField === 'lname'){
+          <div class="col-4">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="currentValue"
+            />
+          </div>
+          <div class="col-3 d-flex justify-content-end">
+            <button class="btn btn-success btn-sm me-2" (click)="saveField()">
+              Save
+            </button>
+            <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">
+              Cancel
+            </button>
+          </div>
+          }@else {
+          <p class="col-4 text-end">{{ user.lname }}</p>
+          <div class="col-3 d-flex justify-content-end">
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="editField('lname', user.lname)"
+            >
+              Update
+            </button>
+          </div>
+          }
         </div>
-        }
       </div>
     </div>
   </div>
@@ -52,9 +91,36 @@
           <hr />
         </div>
 
-        <div class="row text-center mb-3">
-          <h6 class="col">Email Address</h6>
-          <p class="col text-end">{{ user.email }}</p>
+        <!-- Email Address -->
+        <div class="row text-center mb-3 align-items-center">
+          <h6 class="col-5 text-start">Email Address</h6>
+          @if(isEditing && editingField === 'email'){
+          <div class="col-4">
+            <input
+              type="email"
+              class="form-control"
+              [(ngModel)]="currentValue"
+            />
+          </div>
+          <div class="col-3 d-flex justify-content-end">
+            <button class="btn btn-success btn-sm me-2" (click)="saveField()">
+              Save
+            </button>
+            <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">
+              Cancel
+            </button>
+          </div>
+          }@else {
+          <p class="col-4 text-end">{{ user.email }}</p>
+          <div class="col-3 d-flex justify-content-end">
+            <button
+              class="btn btn-primary btn-sm"
+              (click)="editField('email', user.email)"
+            >
+              Update
+            </button>
+          </div>
+          }
         </div>
       </div>
     </div>

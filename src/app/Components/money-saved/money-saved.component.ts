@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { IncomeService } from '../../Services/Income Service/income.service';
 import { ExpenseService } from '../../Services/Expense Service/expense.service';
 import { FormsModule } from '@angular/forms';
+import { FirestoreService } from '../../Services/Firestore Service/firestore.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-money-saved',
@@ -14,6 +16,7 @@ import { FormsModule } from '@angular/forms';
 export class MoneySavedComponent {
   private incomeService = inject(IncomeService);
   private expenseService = inject(ExpenseService);
+  private firestoreService = inject(FirestoreService);
 
   monthlyIncome: number = 0;
   halfMonthlyIncome: number = 0;
@@ -23,6 +26,7 @@ export class MoneySavedComponent {
   moneyWants: number = 0;
 
   ngOnInit() {
+    this.loadSavingsGoal();
     this.calculateSavings();
   }
 
@@ -39,13 +43,15 @@ export class MoneySavedComponent {
         (error) => console.error('Error fetching income:', error)
       );
 
-    this.expenseService.getMonthlyExpense(currentDate.getMonth(), currentDate.getFullYear()).subscribe(
-      (expense) => {
-        this.monthlyExpense = expense;
-        this.updateSavings();
-      },
-      (error) => console.error('Error fetching expenses:', error)
-    );
+    this.expenseService
+      .getMonthlyExpense(currentDate.getMonth(), currentDate.getFullYear())
+      .subscribe(
+        (expense) => {
+          this.monthlyExpense = expense;
+          this.updateSavings();
+        },
+        (error) => console.error('Error fetching expenses:', error)
+      );
   }
 
   updateSavings() {
@@ -61,7 +67,23 @@ export class MoneySavedComponent {
       : 0;
   }
 
+  loadSavingsGoal() {
+    this.firestoreService.getSavingsGoal().subscribe({
+      next: (goal) => {
+        if (goal !== null) {
+          this.savingsGoal = goal;
+          console.log('Loaded savings goal:', this.savingsGoal);
+        } else {
+          console.log('No savings goal found or user not logged in.');
+        }
+      },
+      error: (err) => console.error('Error loading savings goal:', err),
+    });
+  }
   setSavingsGoal() {
-    console.log('Savings goal set to:', this.savingsGoal);
+    this.firestoreService.setSavingsGoal(this.savingsGoal).subscribe({
+      next: () => console.log('Savings goal updated successfully!'),
+      error: (err) => console.error('Error updating savings goal:', err),
+    });
   }
 }

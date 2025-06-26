@@ -21,18 +21,54 @@ export class AccountPageComponent {
   userData$: Observable<CombinedUser | null> =
     this.authService.getCompleteUser();
 
-  editingUser: CombinedUser | null = null;
-  editingField: string | null = null;
   isEditing: boolean = false;
+  editingField: 'fname' | 'lname' | 'email' | null = null;
+  currentValue: string = ''; // Holds the value of the field being edited
+  originalValue: string = ''; // Stores the original value for cancellation
 
   logout(): void {
     this.authService.logout();
   }
 
-  editField(userField: string): void {
+  editField(
+    field: 'fname' | 'lname' | 'email',
+    value: string | null | undefined
+  ): void {
     this.isEditing = true;
-    this.editingField = userField;
+    this.editingField = field;
+    this.currentValue = value || ''; // Ensure it's always a string
+    this.originalValue = value || ''; // Store original value
   }
 
-  saveField(): void {}
+  saveField(): void {
+    if (!this.editingField) return;
+
+    // Get the new value from `currentValue`
+    const newValue = this.currentValue;
+
+    this.firestoreService
+      .updateUserField(this.editingField, newValue)
+      .subscribe({
+        next: () => {
+          console.log(`${this.editingField} updated successfully!`);
+          this.resetEditingState();
+        },
+        error: (err) => {
+          console.error(`Error updating ${this.editingField}:`, err);
+          // Optionally revert to original value on error, though relying on observable re-emission is often better
+          this.resetEditingState();
+        },
+      });
+  }
+
+  cancelEdit(): void {
+    this.resetEditingState();
+  }
+
+  private resetEditingState(): void {
+    this.isEditing = false;
+    this.editingField = null;
+    this.currentValue = '';
+    this.originalValue = '';
+  }
 }
