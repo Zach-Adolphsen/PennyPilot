@@ -6,10 +6,10 @@ Penny Pilot is a budgeting web application made with Angular, Bootstrap, and Goo
 PennyPilot helps you track your income and expenses for each month to help you get a better understanding of your financial health. Once you register (see notes below) you can start entering your income and expense transactions and see them displayed graphically (using chart.js). You can also update and change you personal information that the application needs (fname, lname, & email). You can also set a savings goal amount and track your progress with the progress bar on the dashboard.
 
 # Notes from author
-1) When deploying to github pages, I encounter a 404 error for the forgot password and register pages (I don't understand why).
-   - If you want to log in use this information:
+1) When logging in use this information below or create a new account:
         - Email: admin@test.com
         - Password: testtest
+2) I will try to keep up to date with the Firestore database so you can check out the project to its fullest extent. If parts of the web application are not showing up how you'd expect it's because the api/database key has expired and I need to get a new one.
 
 
 #Angular Notes
