@@ -9,7 +9,7 @@ PennyPilot helps you track your income and expenses for each month to help you g
 1) When logging in use this information below or create a new account:
         - Email: admin@test.com
         - Password: testtest
-2) I will try to keep up to date with the Firestore database so you can check out the project to its fullest extent. If parts of the web application are not showing up how you'd expect it's because the api/database key has expired and I need to get a new one.
+2) I will try to keep up to date with the Firestore database so you can check out the project to its fullest extent. If parts of the web application are not working it's because the api/database key has expired and I need to get a new one.
 
 
 #Angular Notes
