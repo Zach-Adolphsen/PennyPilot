@@ -11,13 +11,12 @@ import {
   AuthService,
   UserInfo,
 } from '../../../Services/Auth Service/auth-service.service';
-import { catchError } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule, CommonModule, ReactiveFormsModule],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
@@ -90,6 +89,6 @@ export class RegisterComponent implements OnInit {
 
     this.userAccountRegister.reset(); // clear form
 
-    // this.router.navigate(['/login']); // redirect user to login page
+    this.router.navigate(['/login']); // redirect user to login page
   }
 }
