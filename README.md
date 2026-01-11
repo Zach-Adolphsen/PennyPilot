@@ -11,8 +11,6 @@ PennyPilot helps you track your income and expenses for each month to help you g
         - Password: testtest
 2) I will try to keep up to date with the Firestore database so you can check out the project to its fullest extent. If parts of the web application are not working it's because the api/database key has expired and I need to get a new one.
 
-App link: https://zach-adolphsen.github.io/PennyPilot/
-
 #Angular Notes
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.5.
